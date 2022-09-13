@@ -1,0 +1,14 @@
+.admin-layout {
+  display: grid;
+  grid: 50px / 1fr;
+  grid-template-areas: "menu" "content";
+  min-height: 100vh;
+
+  &__menu {
+    grid-area: menu;
+  }
+
+  &__main-content {
+    grid-area: content;
+  }
+}
