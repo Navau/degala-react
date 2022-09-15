@@ -134,7 +134,7 @@ export function DemandCharts(props) {
       <h1>DemandAdmin</h1>
       <div className="demand-charts__charts">
         <div className="demand-charts__charts__line">
-          <Line options={options.optionsline} data={data.dataLine} />;
+          <Line options={options.optionsline} data={data.dataLine} />
         </div>
         <div className="demand-charts__charts__pie">
           <Pie
