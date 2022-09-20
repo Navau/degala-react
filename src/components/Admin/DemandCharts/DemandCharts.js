@@ -13,6 +13,8 @@ import {
 } from "chart.js";
 import { Line, Pie } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
+import { Table, Button, Icon } from "semantic-ui-react";
+import { map } from "lodash";
 
 import "./DemandCharts.scss";
 
@@ -169,6 +171,49 @@ export function DemandCharts(props) {
           />
         </div>
       </div>
+      <h1>Pronóstico de Productos</h1>
+      <Table className="table-users-admin">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Producto</Table.HeaderCell>
+            <Table.HeaderCell>Precio</Table.HeaderCell>
+            <Table.HeaderCell>Cantidad</Table.HeaderCell>
+            <Table.HeaderCell>Accion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Camisa</Table.Cell>
+            <Table.Cell>110</Table.Cell>
+            <Table.Cell>1</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Pantalon</Table.Cell>
+            <Table.Cell>250</Table.Cell>
+            <Table.Cell>2</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Polera</Table.Cell>
+            <Table.Cell>150</Table.Cell>
+            <Table.Cell>1</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Chalina</Table.Cell>
+            <Table.Cell>45</Table.Cell>
+            <Table.Cell>1</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Chamarra</Table.Cell>
+            <Table.Cell>120</Table.Cell>
+            <Table.Cell>1</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
     </div>
   );
 }
