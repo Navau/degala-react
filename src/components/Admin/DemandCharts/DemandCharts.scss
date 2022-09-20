@@ -1,17 +1,38 @@
-.demand-charts{
-    &__charts{
-        width: 100%;
-        display: flex !important;
-        justify-content: space-around;
-        align-items: center;
-        flex-direction: row;
-        &__line{
-            width: 60%;
-            height: 60vh;
-        }
-        &__pie{
-            width: 30%;
-            height: 60vh;
-        }
+.demand-charts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  &__charts {
+    width: 100%;
+    display: flex !important;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    &__line {
+      width: 60%;
+      height: 60vh;
     }
+    &__line2 {
+      width: 60%;
+      height: 60vh;
+    }
+    &__pie {
+      width: 30%;
+      height: 60vh;
+    }
+  }
+}
+.predict-charts {
+  &__charts {
+    width: 100%;
+    display: flex !important;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    &__line {
+      width: 60%;
+      height: 60vh;
+    }
+  }
 }

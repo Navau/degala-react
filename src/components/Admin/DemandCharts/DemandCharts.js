@@ -75,63 +75,87 @@ const labels = [
   "Diciembre",
 ];
 
-export const data = {
-  dataLine: {
-    labels,
-    datasets: [
-      {
-        label: "Datos 1",
-        data: labels.map(() =>
-          faker.datatype.number({ min: -1000, max: 1000 })
-        ),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        tension: 0.3,
-      },
-      {
-        label: "Dataset 2",
-        data: labels.map(() =>
-          faker.datatype.number({ min: -1000, max: 1000 })
-        ),
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-        tension: 0.3,
-      },
-    ],
-  },
-  dataPie: {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  },
-};
-
 export function DemandCharts(props) {
-  const {} = props;
+  const { demand, predict } = props;
+  const data = {
+    dataLine: {
+      labels: demand?.mes,
+      datasets: [
+        {
+          label: "Ventas",
+          data: demand?.ventas,
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          tension: 0.3,
+        },
+        {
+          label: "Pronóstico",
+          data: demand?.pred_value,
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+          tension: 0.3,
+        },
+        {
+          label: "Valores Reales",
+          data: demand?.real_value,
+          borderColor: "rgb(255, 162, 0)",
+          backgroundColor: "rgb(255, 162, 0, 0.5)",
+          tension: 0.3,
+        },
+      ],
+    },
+    dataLine2: {
+      labels: predict?.mes,
+      datasets: [
+        {
+          label: "Ventas",
+          data: predict?.ventas,
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          tension: 0.3,
+        },
+        {
+          label: "Pronóstico",
+          data: predict?.pred_value,
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+          tension: 0.3,
+        },
+      ],
+    },
+    dataPie: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+  };
   return (
     <div className="demand-charts">
-      <h1>DemandAdmin</h1>
+      <div className="demand-charts__charts__line2">
+        <Line options={options.optionsline} data={data.dataLine2} />
+      </div>
+      <h2>Pronóstico de prueba (datos de test)</h2>
       <div className="demand-charts__charts">
         <div className="demand-charts__charts__line">
           <Line options={options.optionsline} data={data.dataLine} />
