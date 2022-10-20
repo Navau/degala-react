@@ -505,7 +505,6 @@ export function ReportsAdmin() {
       },
       {
         name: "sin capucha",
-        name: "cremallera",
         options: {
           5: {
             percentage: 5,
@@ -530,7 +529,6 @@ export function ReportsAdmin() {
       },
       {
         name: "técnica",
-        name: "cremallera",
         options: {
           1: {
             percentage: 8,
@@ -641,7 +639,6 @@ export function ReportsAdmin() {
       },
       {
         name: "rayas",
-        name: "transparente",
         options: {
           2: {
             percentage: 6,
