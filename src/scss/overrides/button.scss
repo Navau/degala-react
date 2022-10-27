@@ -1,5 +1,26 @@
+@import "../colors.scss";
+
 .ui.primary.button {
-  background-color: #0098d3;
+  background-color: $dark;
   color: #fff;
   border-radius: 8px;
+
+  &:hover {
+    background-color: $dark-medium;
+  }
+
+  &:focus {
+    background-color: $dark-light !important;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -moz-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+.ui.button {
+  &:focus {
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -moz-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+  }
 }

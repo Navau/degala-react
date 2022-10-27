@@ -1,0 +1,36 @@
+@import "../colors.scss";
+
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before {
+  background-color: $dark !important;
+  border-color: $light !important;
+  &:focus {
+    background-color: $light !important;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -moz-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+.ui.toggle.checkbox label::before {
+  background-color: $light !important;
+  border-color: $dark !important;
+  &:focus {
+    background-color: $light !important;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -moz-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+.ui.toggle.checkbox input:focus:checked ~ .box:before,
+.ui.toggle.checkbox input:focus:checked ~ label:before {
+  background-color: $dark !important;
+  border-color: $light !important;
+  &:focus {
+    background-color: $light !important;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+    -moz-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2) !important;
+  }
+}

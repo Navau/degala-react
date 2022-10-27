@@ -1,14 +1,16 @@
+@import "../../../scss/colors.scss";
+
 .login-admin {
   height: 100vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2a2a72;
-  background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
+  background-color: $dark-light;
+  background-image: linear-gradient(315deg, $dark-light 50%, $dark 74%);
 
   &__content {
-    background-color: #fff;
+    background-color: $white;
     padding: 50px 50px;
     border-radius: 20px;
     width: 500px;
@@ -20,6 +22,7 @@
       font-size: 35px;
       text-align: center;
       margin-bottom: 50px;
+      color: $dark;
     }
   }
 }

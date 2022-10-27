@@ -1,7 +1,8 @@
 import React from "react";
-import { Menu, Icon } from "semantic-ui-react";
+import { Menu, Icon, Image } from "semantic-ui-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
+import Logo from "../../../assets/img/logo.png";
 
 import "./SideMenu.scss";
 
@@ -22,51 +23,46 @@ function MenuLeft(props) {
   const { auth } = useAuth();
 
   return (
-    <Menu fixed="left" borderless className="side" vertical>
-      <Menu.Item as={Link} to={"/admin"} active={pathname === "/admin"}>
-        <Icon name="home" /> Inventarios
-      </Menu.Item>
+    <Menu fixed="left" borderless className="side-menu-admin" vertical>
       <Menu.Item
         as={Link}
-        to={"/admin/products"}
-        active={pathname === "/admin/products"}
+        to={"/"}
+        active={pathname === "/"}
+        className="side-menu-admin__logo"
       >
+        <Image src={Logo} />
+      </Menu.Item>
+      <Menu.Item as={Link} to={"/"} active={pathname === "/"}>
+        <Icon name="home" /> Inventarios
+      </Menu.Item>
+      <Menu.Item as={Link} to={"/products"} active={pathname === "/products"}>
         <Icon name="cart" /> Productos
       </Menu.Item>
       <Menu.Item
         as={Link}
-        to={"/admin/categories"}
-        active={pathname === "/admin/categories"}
+        to={"/categories"}
+        active={pathname === "/categories"}
       >
         <Icon name="folder" /> Categorias
       </Menu.Item>
-      <Menu.Item
-        as={Link}
-        to={"/admin/demand"}
-        active={pathname === "/admin/demand"}
-      >
+      <Menu.Item as={Link} to={"/fabrics"} active={pathname === "/fabrics"}>
+        <Icon name="thumb tack" /> Telas
+      </Menu.Item>
+      <Menu.Item as={Link} to={"/demand"} active={pathname === "/demand"}>
         <Icon name="history" /> Demanda
       </Menu.Item>
       <Menu.Item
         as={Link}
-        to={"/admin/statistics"}
-        active={pathname === "/admin/statistics"}
+        to={"/statistics"}
+        active={pathname === "/statistics"}
       >
         <Icon name="area graph" /> Estadisticas
       </Menu.Item>
-      <Menu.Item
-        as={Link}
-        to={"/admin/reports"}
-        active={pathname === "/admin/reports"}
-      >
+      <Menu.Item as={Link} to={"/reports"} active={pathname === "/reports"}>
         <Icon name="newspaper" /> Reportes
       </Menu.Item>
       {auth.me?.is_staff && (
-        <Menu.Item
-          as={Link}
-          to={"/admin/users"}
-          active={pathname === "/admin/users"}
-        >
+        <Menu.Item as={Link} to={"/users"} active={pathname === "/users"}>
           <Icon name="users" /> Usuarios
         </Menu.Item>
       )}

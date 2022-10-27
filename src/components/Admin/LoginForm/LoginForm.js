@@ -56,7 +56,12 @@ function initialValues() {
 
 function validationSchema() {
   return {
-    email: Yup.string().email(true).required(true),
-    password: Yup.string().required(true),
+    email: Yup.string()
+      .email("Debe ingresar un correo electrónico válido")
+      .required("El correo electrónico es obligatorio"),
+    password: Yup.string()
+      .min(6, "La contraseña debe ser mayor o igual a 6 digitos")
+      .max(50, "La contraseña debe ser menor o igual a 50 digitos")
+      .required("La contraseña es obligatoria"),
   };
 }

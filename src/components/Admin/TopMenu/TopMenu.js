@@ -16,9 +16,6 @@ export function TopMenu() {
 
   return (
     <Menu fixed="top" className="top-menu-admin">
-      <Menu.Item className="top-menu-admin__logo">
-        <p>DeGala Admin</p>
-      </Menu.Item>
       <Menu.Menu position="right">
         <Menu.Item>Hola, {renderName()}</Menu.Item>
         <Menu.Item onClick={logout}>

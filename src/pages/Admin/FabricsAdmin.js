@@ -1,75 +1,71 @@
 import React, { useState, useEffect } from "react";
 import { Loader } from "semantic-ui-react";
 import {
-  AddEditProductForm,
   HeaderPage2,
-  TableProductAdmin,
+  TableFabrics,
+  AddEditFabricForm,
+  DeleteFabricForm,
 } from "../../components/Admin";
 import { ModalBasic, ModalBoolean } from "../../components/Common";
-import { useProduct } from "../../hooks";
+import { useFabric } from "../../hooks/useFabric";
 
-export function ProductsAdmin() {
+export function FabricsAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [showModalBoolean, setShowModalBoolean] = useState(false);
   const [titleModal, setTitleModal] = useState(null);
   const [contentModal, setContentModal] = useState(null);
   const [dataSingleDelete, setDataSingleDelete] = useState(null);
   const [refetch, setRefetch] = useState(false);
-  const { loading, products, getProducts, deleteProduct } = useProduct();
+
+  const { loading, error, fabrics, getFabrics, deleteFabric } = useFabric();
 
   useEffect(() => {
-    getProducts();
+    getFabrics();
   }, [refetch]);
 
   const openCloseModal = () => setShowModal((prev) => !prev);
   const openCloseModalBoolean = () => setShowModalBoolean((prev) => !prev);
-  const onRefetch = () => setRefetch((prev) => !prev);
+  const onRefresh = () => setRefetch((prev) => !prev);
 
-  const addProduct = () => {
-    setTitleModal("Nuevo producto");
+  const addFabric = () => {
+    setTitleModal("Nueva tela");
     setContentModal(
-      <AddEditProductForm onClose={openCloseModal} onRefetch={onRefetch} />
+      <AddEditFabricForm onClose={openCloseModal} onRefresh={onRefresh} />
     );
     openCloseModal();
   };
 
-  const updateProduct = (data) => {
-    setTitleModal("Actualizar producto");
+  const updateFabric = (data) => {
+    setTitleModal("Actualizar tela");
     setContentModal(
-      <AddEditProductForm
+      <AddEditFabricForm
         onClose={openCloseModal}
-        onRefetch={onRefetch}
-        product={data}
+        onRefresh={onRefresh}
+        fabric={data}
       />
     );
     openCloseModal();
   };
 
-  const onDeleteProduct = async (data) => {
+  const onDeleteFabric = (data) => {
     setDataSingleDelete(data);
-    setTitleModal("Eliminar Producto");
-    setContentModal(
-      <h1>¿Esta seguro de que desea eliminar el producto {data?.title}?</h1>
-    );
+    setTitleModal("Eliminar tela");
+    setContentModal(<DeleteFabricForm fabric={data} />);
     openCloseModalBoolean();
   };
 
   return (
     <>
-      <HeaderPage2
-        title="Productos"
-        btnTitle="Nuevo Producto"
-        btnClick={addProduct}
-      />
+      <HeaderPage2 title="Telas" btnTitle="Nueva Tela" btnClick={addFabric} />
       {loading ? (
         <Loader active inline="centered">
           Cargando...
         </Loader>
       ) : (
-        <TableProductAdmin
-          products={products}
-          updateProduct={updateProduct}
-          onDeleteProduct={onDeleteProduct}
+        <TableFabrics
+          fabrics={fabrics}
+          updateFabric={updateFabric}
+          onDeleteFabric={onDeleteFabric}
         />
       )}
       <ModalBasic
@@ -81,10 +77,10 @@ export function ProductsAdmin() {
       <ModalBoolean
         show={showModalBoolean}
         onClose={openCloseModalBoolean}
-        onRefetch={onRefetch}
+        onRefetch={onRefresh}
         title={titleModal}
         children={contentModal}
-        deleteFunction={deleteProduct}
+        deleteFunction={deleteFabric}
         data={dataSingleDelete}
       />
     </>

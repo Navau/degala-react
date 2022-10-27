@@ -4,6 +4,7 @@ import {
   UsersAdmin,
   CategoriesAdmin,
   ProductsAdmin,
+  FabricsAdmin,
   DemandAdmin,
   ReportsAdmin,
   StatisticsAdmin,
@@ -11,37 +12,42 @@ import {
 
 const routesAdmin = [
   {
-    path: "/admin",
+    path: "/",
     layout: AdminLayout,
     component: HomeAdmin,
   },
   {
-    path: "/admin/products",
+    path: "/products",
     layout: AdminLayout,
     component: ProductsAdmin,
   },
   {
-    path: "/admin/categories",
+    path: "/categories",
     layout: AdminLayout,
     component: CategoriesAdmin,
   },
   {
-    path: "/admin/demand",
+    path: "/fabrics",
+    layout: AdminLayout,
+    component: FabricsAdmin,
+  },
+  {
+    path: "/demand",
     layout: AdminLayout,
     component: DemandAdmin,
   },
   {
-    path: "/admin/statistics",
+    path: "/statistics",
     layout: AdminLayout,
     component: StatisticsAdmin,
   },
   {
-    path: "/admin/reports",
+    path: "/reports",
     layout: AdminLayout,
     component: ReportsAdmin,
   },
   {
-    path: "/admin/users",
+    path: "/users",
     layout: AdminLayout,
     component: UsersAdmin,
   },

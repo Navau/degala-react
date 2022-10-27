@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Form, Image, Button, Checkbox, Dropdown } from "semantic-ui-react";
+import {
+  Form,
+  Image,
+  Button,
+  Checkbox,
+  Dropdown,
+  Label,
+} from "semantic-ui-react";
 import { map } from "lodash";
 import { useDropzone } from "react-dropzone";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useCategory, useProduct } from "../../../../hooks";
+import { useCategory, useFabric, useProduct } from "../../../../hooks";
+import { GENRE_PRODUCT, REGEX_PATTERNS } from "../../../../utils/constants";
 
 import "./AddEditProductForm.scss";
 
@@ -12,19 +20,27 @@ export function AddEditProductForm(props) {
   const { onClose, onRefetch, product } = props;
   const [categoriesFormat, setCategoriesFormat] = useState([]);
   const [previewImage, setPreviewImage] = useState(product?.image || null);
+  const [fabricsFormat, setFabricsFormat] = useState([]);
   const { categories, getCategories } = useCategory();
+  const { fabrics, getFabrics } = useFabric();
   const { addProduct, updateProduct } = useProduct();
   useEffect(() => {
     getCategories();
   }, []);
   useEffect(() => {
+    getFabrics();
+  }, []);
+  useEffect(() => {
     setCategoriesFormat(formatDropdownData(categories));
   }, [categories]);
+  useEffect(() => {
+    setFabricsFormat(formatDropdownData(fabrics));
+  }, [fabrics]);
 
   const formik = useFormik({
     initialValues: initialValues(product),
     validationSchema: Yup.object(product ? updateSchema() : newSchema()),
-    validateOnChange: false,
+    validateOnChange: true,
     onSubmit: async (formValue) => {
       if (product) {
         await updateProduct(product.id, formValue);
@@ -59,6 +75,13 @@ export function AddEditProductForm(props) {
         error={formik.errors.title}
       />
       <Form.Input
+        name="color"
+        placeholder="Color"
+        value={formik.values.color}
+        onChange={formik.handleChange}
+        error={formik.errors.color}
+      />
+      <Form.Input
         type="number"
         name="price"
         placeholder="Precio"
@@ -66,15 +89,73 @@ export function AddEditProductForm(props) {
         onChange={formik.handleChange}
         error={formik.errors.price}
       />
-      <Dropdown
-        placeholder="Categoría"
-        fluid
-        selection
-        search
-        options={categoriesFormat}
-        value={formik.values.category}
-        error={formik.errors.category}
-        onChange={(_, data) => formik.setFieldValue("category", data.value)}
+      <Form.Input
+        type="number"
+        name="stock"
+        placeholder="Stock"
+        value={formik.values.stock}
+        onChange={formik.handleChange}
+        error={formik.errors.stock}
+      />
+      <Form.Field>
+        <Dropdown
+          placeholder="Género"
+          fluid
+          selection
+          search
+          options={formatDropdownGenre()}
+          value={formik.values.genre}
+          error={formik.errors.genre}
+          onChange={(_, data) => formik.setFieldValue("genre", data.value)}
+        />
+        {formik.errors.genre && (
+          <Label pointing prompt>
+            {formik.errors.genre}
+          </Label>
+        )}
+      </Form.Field>
+      <Form.Field>
+        <Dropdown
+          placeholder="Categoría"
+          fluid
+          selection
+          search
+          options={categoriesFormat}
+          value={formik.values.category}
+          error={formik.errors.category}
+          onChange={(_, data) => formik.setFieldValue("category", data.value)}
+        />
+        {formik.errors.category && (
+          <Label pointing prompt>
+            {formik.errors.category}
+          </Label>
+        )}
+      </Form.Field>
+      <Form.Field>
+        <Dropdown
+          placeholder="Tela"
+          fluid
+          selection
+          search
+          options={fabricsFormat}
+          value={formik.values.fabric}
+          error={formik.errors.fabric}
+          onChange={(_, data) => formik.setFieldValue("fabric", data.value)}
+        />
+        {formik.errors.fabric && (
+          <Label pointing prompt>
+            {formik.errors.fabric}
+          </Label>
+        )}
+      </Form.Field>
+
+      <Form.TextArea
+        name="description"
+        placeholder="Descripción"
+        rows={5}
+        value={formik.values.description}
+        onChange={formik.handleChange}
+        error={formik.errors.description}
       />
       <div className="add-edit-product-form__active">
         <Checkbox
@@ -84,17 +165,23 @@ export function AddEditProductForm(props) {
         />
         Producto activo
       </div>
-
-      <Button
-        type="button"
-        fluid
-        {...getRootProps()}
-        color={formik.errors.image && "red"}
-      >
-        {previewImage ? "Cambiar Imagen" : "Subir Imagen"}
-      </Button>
-      <input {...getInputProps()} />
-      <Image src={previewImage} fluid />
+      <Form.Field>
+        <Button
+          type="button"
+          fluid
+          {...getRootProps()}
+          color={formik.errors.image && "red"}
+        >
+          {previewImage ? "Cambiar Imagen" : "Subir Imagen"}
+        </Button>
+        <input {...getInputProps()} />
+        <Image src={previewImage} fluid />
+        {formik.errors.image && (
+          <Label pointing prompt>
+            {formik.errors.image}
+          </Label>
+        )}
+      </Form.Field>
 
       <Button
         type="submit"
@@ -104,6 +191,31 @@ export function AddEditProductForm(props) {
       ></Button>
     </Form>
   );
+}
+
+function formatDropdownGenre() {
+  return [
+    {
+      key: 0,
+      text: "Masculino",
+      value: GENRE_PRODUCT.MALE,
+    },
+    {
+      key: 1,
+      text: "Femenino",
+      value: GENRE_PRODUCT.FEMALE,
+    },
+    {
+      key: 2,
+      text: "Sin género",
+      value: GENRE_PRODUCT.UNDEFINED,
+    },
+    {
+      key: 3,
+      text: "Otro",
+      value: GENRE_PRODUCT.OTHER,
+    },
+  ];
 }
 
 function formatDropdownData(data) {
@@ -118,7 +230,12 @@ function initialValues(data) {
   return {
     title: data?.title || "",
     price: data?.price || "",
+    color: data?.color || "",
+    stock: data?.stock || 0,
+    genre: data?.genre || "",
+    description: data?.description || "",
     category: data?.category || "",
+    fabric: data?.fabric || "",
     active: data?.active ? true : false,
     image: "",
   };
@@ -126,20 +243,173 @@ function initialValues(data) {
 
 function newSchema() {
   return {
-    title: Yup.string().required(true),
-    price: Yup.number().required(true),
-    category: Yup.number().required(true),
-    active: Yup.boolean().required(true),
-    image: Yup.string().required(true),
+    title: Yup.string()
+      .trim("El nombre del producto no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "El nombre del producto debe contener como mínimo 1 caracter")
+      .max(
+        254,
+        "El nombre del producto debe contener como máximo 254 caracteres"
+      )
+      .required("El nombre del producto es obligatorio"),
+    price: Yup.number()
+      .typeError("El precio no es un número válido")
+      .test(
+        "Es decimal",
+        "El precio no cumple con el formato correcto de número decimal, ejemplo: '9999.99'",
+        (val, options) => {
+          if (val != undefined) {
+            return REGEX_PATTERNS.price.test(options.originalValue);
+          }
+          return true;
+        }
+      )
+      .min(1, "El precio debe ser mayor a 0")
+      .max(9999, "El precio debe ser menor a 9999")
+      .required("El precio es obligatorio"),
+    color: Yup.string()
+      .trim("El color no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "El color debe contener como mínimo 1 caracter")
+      .max(50, "El color debe contener como máximo 50 caracteres"),
+    stock: Yup.number()
+      .typeError("El stock no es un número válido")
+      .default(0)
+      .test(
+        "Es entero",
+        "El stock no cumple con el formato correcto de número decimal, ejemplo: '999999999'",
+        (val, options) => {
+          if (val != undefined) {
+            return REGEX_PATTERNS.stock.test(options.originalValue);
+          }
+          return true;
+        }
+      )
+      .min(0, "El stock debe ser mayor o igual a 0")
+      .max(100000000, "El stock debe ser menor a 100000000")
+      .required("El stock es obligatorio"),
+    genre: Yup.string()
+      .trim("El género no debe incluir espacios en blanco")
+      .default("undefined")
+      .strict(true)
+      .test(
+        "Valor correcto",
+        "El género debe ser uno de estos valores ['Masculino', 'Femenino', 'Sin género', 'otro']",
+        (val, options) => {
+          return true;
+        }
+      )
+      .min(1, "El género debe contener como mínimo 1 caracter")
+      .max(254, "El género debe contener como máximo 254 caracteres")
+      .required("El género es obligatorio"),
+    description: Yup.string()
+      .trim("La descripción no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "La descripción debe contener como minimo 1 caracter")
+      .max(999, "La descripción debe contener como máximo 999 caracteres"),
+    category: Yup.number()
+      .typeError("La categoría no es un valor válido")
+      .required("La categoría es obligatorio"),
+    fabric: Yup.number()
+      .typeError("La tela no es un valor válido")
+      .required("La tela es obligatorio"),
+    active: Yup.boolean().default(true).required("El activo es obligatorio"),
+    image: Yup.string("La imagen no es válida")
+      .test(
+        "Valor correcto",
+        "La imagen debe ser formato jpeg o png",
+        (val, optionsValue) => {
+          const typeFile = optionsValue.options.originalValue?.type;
+          if (typeFile === "image/png" || typeFile === "image/jpeg")
+            return true;
+          return false;
+        }
+      )
+      .required("La imagen es obligatorio"),
   };
 }
 
 function updateSchema() {
   return {
-    title: Yup.string().required(true),
-    price: Yup.number().required(true),
-    category: Yup.number().required(true),
-    active: Yup.boolean().required(true),
-    image: Yup.string(),
+    title: Yup.string()
+      .trim("El nombre del producto no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "El nombre del producto debe contener como mínimo 1 caracter")
+      .max(
+        254,
+        "El nombre del producto debe contener como máximo 254 caracteres"
+      )
+      .required("El nombre del producto es obligatorio"),
+    price: Yup.number()
+      .typeError("El precio no es un número válido")
+      .test(
+        "Es decimal",
+        "El precio no cumple con el formato correcto de número decimal, ejemplo: '9999.99'",
+        (val, options) => {
+          if (val != undefined) {
+            return REGEX_PATTERNS.price.test(options.originalValue);
+          }
+          return true;
+        }
+      )
+      .min(1, "El precio debe ser mayor a 0")
+      .max(9999, "El precio debe ser menor a 9999")
+      .required("El precio es obligatorio"),
+    color: Yup.string()
+      .trim("El color no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "El color debe contener como mínimo 1 caracter")
+      .max(50, "El color debe contener como máximo 50 caracteres"),
+    stock: Yup.number()
+      .typeError("El stock no es un número válido")
+      .default(0)
+      .test(
+        "Es entero",
+        "El stock no cumple con el formato correcto de número decimal, ejemplo: '999999999'",
+        (val, options) => {
+          if (val != undefined) {
+            return REGEX_PATTERNS.stock.test(options.originalValue);
+          }
+          return true;
+        }
+      )
+      .min(0, "El stock debe ser mayor o igual a 0")
+      .max(100000000, "El stock debe ser menor a 100000000")
+      .required("El stock es obligatorio"),
+    genre: Yup.string()
+      .trim("El género no debe incluir espacios en blanco")
+      .default("undefined")
+      .strict(true)
+      .test(
+        "Valor correcto",
+        "El género debe ser uno de estos valores ['Masculino', 'Femenino', 'Sin género', 'otro']",
+        (val, options) => {
+          return true;
+        }
+      )
+      .min(1, "El género debe contener como mínimo 1 caracter")
+      .max(254, "El género debe contener como máximo 254 caracteres")
+      .required("El género es obligatorio"),
+    description: Yup.string()
+      .trim("La descripción no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "La descripción debe contener como minimo 1 caracter")
+      .max(999, "La descripción debe contener como máximo 999 caracteres"),
+    category: Yup.number()
+      .typeError("La categoría no es un valor válido")
+      .required("La categoría es obligatorio"),
+    fabric: Yup.number()
+      .typeError("La tela no es un valor válido")
+      .required("La tela es obligatorio"),
+    active: Yup.boolean().default(true).required("El activo es obligatorio"),
+    image: Yup.string("La imagen no es válida").test(
+      "Valor correcto",
+      "La imagen debe ser formato jpeg o png",
+      (val, optionsValue) => {
+        const typeFile = optionsValue.options.originalValue?.type;
+        if (typeFile === "image/png" || typeFile === "image/jpeg") return true;
+        return false;
+      }
+    ),
   };
 }

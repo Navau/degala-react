@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Form, Image, Button } from "semantic-ui-react";
+import { Form, Image, Button, Label } from "semantic-ui-react";
 import { useDropzone } from "react-dropzone";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -54,22 +54,30 @@ export function AddEditCategoryForm(props) {
         onChange={formik.handleChange}
         error={formik.errors.title}
       />
-      <Button
-        type="button"
-        fluid
-        color={formik.errors.image && "red"}
-        {...getRootProps()}
-      >
-        {previewImage ? "Cambiar Imagen" : "Subir Imagen"}
-      </Button>
-      <input {...getInputProps()} />
-      <Image src={previewImage} fluid />
+      <Form.Field>
+        <Button
+          type="button"
+          fluid
+          color={formik.errors.image && "red"}
+          {...getRootProps()}
+        >
+          {previewImage ? "Cambiar Imagen" : "Subir Imagen"}
+        </Button>
+        <input {...getInputProps()} />
+        <Image src={previewImage} fluid />
+        {formik.errors.image && (
+          <Label pointing prompt>
+            {formik.errors.image}
+          </Label>
+        )}
+      </Form.Field>
+
       <Button
         type="submit"
         primary
         fluid
         content={category ? "Actualizar" : "Crear"}
-      ></Button>
+      />
     </Form>
   );
 }
@@ -83,14 +91,41 @@ function initialValues(data) {
 
 function newSchema() {
   return {
-    title: Yup.string().required(true),
-    image: Yup.string().required(true),
+    title: Yup.string()
+      .trim("El nombre de la categoría no debe incluir espacios en blanco")
+      .strict(true)
+      .min(1, "El nombre de la categoría debe contener como mínimo 1 caracter")
+      .max(
+        254,
+        "El nombre de la categoría debe contener como máximo 254 caracteres"
+      )
+      .required("El nombre de la categoría es obligatorio"),
+    image: Yup.string("La imagen no es válida")
+      .test(
+        "Valor correcto",
+        "La imagen debe ser formato jpeg o png",
+        (val, optionsValue) => {
+          const typeFile = optionsValue.options.originalValue?.type;
+          if (typeFile === "image/png" || typeFile === "image/jpeg")
+            return true;
+          return false;
+        }
+      )
+      .required("La imagen es obligatorio"),
   };
 }
 
 function updateSchema() {
   return {
     title: Yup.string().required(true),
-    image: Yup.string(),
+    image: Yup.string("La imagen no es válida").test(
+      "Valor correcto",
+      "La imagen debe ser formato jpeg o png",
+      (val, optionsValue) => {
+        const typeFile = optionsValue.options.originalValue?.type;
+        if (typeFile === "image/png" || typeFile === "image/jpeg") return true;
+        return false;
+      }
+    ),
   };
 }

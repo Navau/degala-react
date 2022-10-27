@@ -3,7 +3,7 @@ import { Loader, Button, Form } from "semantic-ui-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DemandCharts } from "../../components/Admin";
-import { useDemand } from "../../hooks/useDemand";
+import { useDemand } from "../../hooks";
 
 export function DemandAdmin(props) {
   const {

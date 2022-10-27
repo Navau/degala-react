@@ -1,4 +1,4 @@
-.add-edit-product-form {
+.add-edit-fabric-form {
   &__active {
     display: flex;
     align-items: center;
@@ -10,17 +10,7 @@
     }
   }
 
-  .ui.selection.dropdown {
-    margin: 20px 0;
-  }
-
-  .ui.image {
-    margin-top: 10px;
-    width: 200px;
-    margin: 0 auto;
-  }
-
-  .ui.button.primary {
+  .ui.primary.button {
     margin-top: 50px;
   }
 }

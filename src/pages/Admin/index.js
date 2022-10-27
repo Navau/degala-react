@@ -6,3 +6,4 @@ export * from "./DemandAdmin";
 export * from "./ProductsAdmin";
 export * from "./ReportsAdmin";
 export * from "./StatisticsAdmin";
+export * from "./FabricsAdmin";

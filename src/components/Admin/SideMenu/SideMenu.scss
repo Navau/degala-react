@@ -1,12 +1,33 @@
+@import "../../../scss/colors.scss";
+
 .side-menu-admin {
+  &__logo {
+    padding: 0 !important;
+
+    img {
+      width: 250px !important;
+    }
+  }
   .ui.menu {
+    background-color: $dark !important;
     width: 250px !important;
     overflow: hidden;
-    padding-top: 4em;
     z-index: 99 !important;
+
+    .item {
+      color: $white !important;
+
+      &:hover {
+        background-color: $dark-medium;
+      }
+      &.active {
+        background-color: $dark-light !important;
+      }
+    }
 
     i.icon {
       float: initial !important;
+      color: $white !important;
       margin: 0 !important;
       margin-right: 10px !important;
     }

@@ -1,3 +1,5 @@
+@import "../../scss/colors.scss";
+
 .admin-layout {
   display: grid;
   grid: 50px / 1fr;
@@ -6,9 +8,12 @@
 
   &__menu {
     grid-area: menu;
+    background-color: $white !important;
+    z-index: 99 !important;
   }
 
   &__main-content {
     grid-area: content;
+    background-color: $white !important;
   }
 }
