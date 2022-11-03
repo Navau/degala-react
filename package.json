@@ -1,5 +1,5 @@
 {
-  "name": "icard",
+  "name": "degala-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -17,6 +17,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-export-excel": "^0.5.3",
+    "react-pdf": "^5.7.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.0.8",

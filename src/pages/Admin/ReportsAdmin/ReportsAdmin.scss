@@ -1,2 +1,9 @@
 .reports-admin {
+  h1 {
+    margin-top: 50px;
+  }
+  &__control,
+  &__movement {
+    margin-top: 50px;
+  }
 }
