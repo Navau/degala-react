@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Form, Image, Button, Label } from "semantic-ui-react";
 import { useDropzone } from "react-dropzone";
 import { useFormik } from "formik";
@@ -47,13 +47,16 @@ export function AddEditCategoryForm(props) {
 
   return (
     <Form className="add-edit-category-form" onSubmit={formik.handleSubmit}>
-      <Form.Input
-        name="title"
-        placeholder="Nombre de la categoría"
-        value={formik.values.title}
-        onChange={formik.handleChange}
-        error={formik.errors.title}
-      />
+      <Form.Field>
+        <Form.Input
+          name="title"
+          label="Nombre de la categoría (*Obligatorio)"
+          placeholder="Nombre de la categoría"
+          value={formik.values.title}
+          onChange={formik.handleChange}
+          error={formik.errors.title}
+        />
+      </Form.Field>
       <Form.Field>
         <Button
           type="button"
@@ -61,7 +64,7 @@ export function AddEditCategoryForm(props) {
           color={formik.errors.image && "red"}
           {...getRootProps()}
         >
-          {previewImage ? "Cambiar Imagen" : "Subir Imagen"}
+          {previewImage ? "Cambiar Imagen" : "Subir Imagen"} (*Obligatorio)
         </Button>
         <input {...getInputProps()} />
         <Image src={previewImage} fluid />
@@ -92,7 +95,9 @@ function initialValues(data) {
 function newSchema() {
   return {
     title: Yup.string()
-      .trim("El nombre de la categoría no debe incluir espacios en blanco")
+      .trim(
+        "El nombre de la categoría no debe incluir espacios en blanco por demas"
+      )
       .strict(true)
       .min(1, "El nombre de la categoría debe contener como mínimo 1 caracter")
       .max(
@@ -101,6 +106,7 @@ function newSchema() {
       )
       .required("El nombre de la categoría es obligatorio"),
     image: Yup.string("La imagen no es válida")
+      .required("La imagen es obligatorio")
       .test(
         "Valor correcto",
         "La imagen debe ser formato jpeg o png",
@@ -110,8 +116,7 @@ function newSchema() {
             return true;
           return false;
         }
-      )
-      .required("La imagen es obligatorio"),
+      ),
   };
 }
 

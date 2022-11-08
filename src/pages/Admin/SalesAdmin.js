@@ -1,75 +1,69 @@
 import React, { useState, useEffect } from "react";
 import { Loader } from "semantic-ui-react";
 import {
-  AddEditProductForm,
+  AddEditSaleForm,
   HeaderPage2,
-  TableProductAdmin,
+  TableSaleAdmin,
 } from "../../components/Admin";
 import { ModalBasic, ModalBoolean } from "../../components/Common";
-import { useProduct } from "../../hooks";
+import { useSale } from "../../hooks";
 
-export function ProductsAdmin() {
+export function SalesAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [showModalBoolean, setShowModalBoolean] = useState(false);
   const [titleModal, setTitleModal] = useState(null);
   const [contentModal, setContentModal] = useState(null);
   const [dataSingleDelete, setDataSingleDelete] = useState(null);
   const [refetch, setRefetch] = useState(false);
-  const { loading, products, getProducts, deleteProduct } = useProduct();
+  const { loading, sales, getSales, deleteSale } = useSale();
 
   useEffect(() => {
-    getProducts();
+    getSales();
   }, [refetch]);
 
   const openCloseModal = () => setShowModal((prev) => !prev);
   const openCloseModalBoolean = () => setShowModalBoolean((prev) => !prev);
   const onRefetch = () => setRefetch((prev) => !prev);
 
-  const addProduct = () => {
-    setTitleModal("Nuevo producto");
+  const addSale = () => {
+    setTitleModal("Nueva venta");
     setContentModal(
-      <AddEditProductForm onClose={openCloseModal} onRefetch={onRefetch} />
+      <AddEditSaleForm onClose={openCloseModal} onRefetch={onRefetch} />
     );
     openCloseModal();
   };
 
-  const updateProduct = (data) => {
-    setTitleModal("Actualizar producto");
+  const updateSale = (data) => {
+    setTitleModal("Actualizar venta");
     setContentModal(
-      <AddEditProductForm
+      <AddEditSaleForm
         onClose={openCloseModal}
         onRefetch={onRefetch}
-        product={data}
+        sale={data}
       />
     );
     openCloseModal();
   };
 
-  const onDeleteProduct = async (data) => {
+  const onDeleteSale = async (data) => {
     setDataSingleDelete(data);
-    setTitleModal("Eliminar Producto");
-    setContentModal(
-      <h1>¿Esta seguro de que desea eliminar el producto {data?.title}?</h1>
-    );
+    setTitleModal("Eliminar Venta");
+    setContentModal(<h1>¿Esta seguro de que desea eliminar la venta?</h1>);
     openCloseModalBoolean();
   };
 
   return (
     <>
-      <HeaderPage2
-        title="Productos"
-        btnTitle="Nuevo Producto"
-        btnClick={addProduct}
-      />
+      <HeaderPage2 title="Ventas" btnTitle="Nueva Venta" btnClick={addSale} />
       {loading ? (
         <Loader active inline="centered">
           Cargando...
         </Loader>
       ) : (
-        <TableProductAdmin
-          products={products}
-          updateProduct={updateProduct}
-          onDeleteProduct={onDeleteProduct}
+        <TableSaleAdmin
+          sales={sales}
+          updateSale={updateSale}
+          onDeleteSale={onDeleteSale}
         />
       )}
       <ModalBasic
@@ -85,7 +79,7 @@ export function ProductsAdmin() {
         onRefetch={onRefetch}
         title={titleModal}
         children={contentModal}
-        deleteFunction={deleteProduct}
+        deleteFunction={deleteSale}
         data={dataSingleDelete}
       />
     </>

@@ -15,7 +15,7 @@ export function TableUsers(props) {
           <Table.HeaderCell>Email</Table.HeaderCell>
           <Table.HeaderCell>Nombre</Table.HeaderCell>
           <Table.HeaderCell>Apellidos</Table.HeaderCell>
-          <Table.HeaderCell>Activo</Table.HeaderCell>
+          <Table.HeaderCell>Estado</Table.HeaderCell>
           <Table.HeaderCell>Staff</Table.HeaderCell>
           <Table.HeaderCell>Accion</Table.HeaderCell>
         </Table.Row>
@@ -51,7 +51,7 @@ function Actions(props) {
   const { user, updateUser, onDeleteUser } = props;
   return (
     <Table.Cell textAlign="right">
-      <Button icon onClick={() => updateUser(user)}>
+      <Button icon primary onClick={() => updateUser(user)}>
         <Icon name="pencil" />
       </Button>
       <Button icon negative onClick={() => onDeleteUser(user)}>

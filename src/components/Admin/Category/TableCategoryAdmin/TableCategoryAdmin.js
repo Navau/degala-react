@@ -7,12 +7,12 @@ import "./TableCategoryAdmin.scss";
 export function TableCategoryAdmin(props) {
   const { categories, updateCategory, onDeleteCategory } = props;
   return (
-    <Table className="table-category-admin">
+    <Table celled className="table-category-admin">
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Imagen</Table.HeaderCell>
           <Table.HeaderCell>Categoría</Table.HeaderCell>
-          <Table.HeaderCell>Acciones</Table.HeaderCell>
+          <Table.HeaderCell textAlign="center">Acciones</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -37,8 +37,8 @@ export function TableCategoryAdmin(props) {
 function Actions(props) {
   const { category, updateCategory, onDeleteCategory } = props;
   return (
-    <Table.Cell>
-      <Button icon onClick={() => updateCategory(category)}>
+    <Table.Cell textAlign="right">
+      <Button icon primary onClick={() => updateCategory(category)}>
         <Icon name="pencil" />
       </Button>
       <Button icon negative onClick={() => onDeleteCategory(category)}>

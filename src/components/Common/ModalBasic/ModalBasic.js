@@ -6,7 +6,13 @@ import "./ModalBasic.scss";
 export function ModalBasic(props) {
   const { show, size, title, children, onClose } = props;
   return (
-    <Modal className="modal-basic" open={show} onClose={onClose} size={size}>
+    <Modal
+      className="modal-basic"
+      open={show}
+      onClose={onClose}
+      size={size}
+      closeIcon
+    >
       {title && <Modal.Header>{title}</Modal.Header>}
       <Modal.Content>{children}</Modal.Content>
     </Modal>
@@ -14,5 +20,5 @@ export function ModalBasic(props) {
 }
 
 ModalBasic.defaultProps = {
-  size: "tiny",
+  size: "small",
 };

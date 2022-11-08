@@ -32,22 +32,27 @@ export function AddEditFabricForm(props) {
 
   return (
     <Form className="add-edit-fabric-form" onSubmit={formik.handleSubmit}>
-      <Form.Input
-        name="title"
-        placeholder="Nombre de Tela"
-        value={formik.values.title}
-        onChange={formik.handleChange}
-        error={formik.errors.title}
-      />
-      <Form.Input
-        name="price"
-        placeholder="Precio"
-        value={formik.values.price}
-        onChange={formik.handleChange}
-        error={formik.errors.price}
-      />
+      <Form.Group widths="equal">
+        <Form.Input
+          name="title"
+          label="Nombre de Tela (*Obligatorio)"
+          placeholder="Nombre de Tela"
+          value={formik.values.title}
+          onChange={formik.handleChange}
+          error={formik.errors.title}
+        />
+        <Form.Input
+          name="price"
+          label="Precio (*Obligatorio)"
+          placeholder="Precio"
+          value={formik.values.price}
+          onChange={formik.handleChange}
+          error={formik.errors.price}
+        />
+      </Form.Group>
       <Form.TextArea
         name="description"
+        label="Descripción (Opcional)"
         placeholder="Descripción"
         rows={5}
         value={formik.values.description}
@@ -60,7 +65,7 @@ export function AddEditFabricForm(props) {
           checked={formik.values.active}
           onChange={(_, data) => formik.setFieldValue("active", data.checked)}
         />{" "}
-        Tela Activa
+        Tela Activa (*Obligatorio)
       </div>
 
       <Button
@@ -78,14 +83,15 @@ function initialValues(data) {
     title: data?.title || "",
     price: data?.price || "",
     description: data?.description || "",
-    active: data?.active || true,
+    active:
+      data?.active === true || data?.active === false ? data.active : true,
   };
 }
 
 function newSchema() {
   return {
     title: Yup.string()
-      .trim("El nombre de la tela no debe incluir espacios en blanco")
+      .trim("El nombre de la tela no debe incluir espacios en blanco por demas")
       .strict(true)
       .min(1, "El nombre de la tela debe contener como minimo 1 caracter")
       .max(254, "El nombre de la tela debe contener como máximo 254 caracteres")
@@ -96,7 +102,7 @@ function newSchema() {
         "Es decimal",
         "El precio no cumple con el formato correcto de número decimal, ejemplo: '9999.99'",
         (val, options) => {
-          if (val != undefined) {
+          if (val !== undefined) {
             return REGEX_PATTERNS.price.test(options.originalValue);
           }
           return true;
@@ -106,18 +112,18 @@ function newSchema() {
       .max(9999, "El precio debe ser menor a 9999")
       .required("El precio es obligatorio"),
     description: Yup.string()
-      .trim("La descripción no debe incluir espacios en blanco")
+      .trim("La descripción no debe incluir espacios en blanco por demas")
       .strict(true)
       .min(1, "La descripción debe contener como minimo 1 caracter")
       .max(999, "La descripción debe contener como máximo 999 caracteres"),
-    active: Yup.bool().required("El activo es obligatorio"),
+    active: Yup.boolean().required("El activo es obligatorio"),
   };
 }
 
 function updateSchema() {
   return {
     title: Yup.string()
-      .trim("El nombre de la tela no debe incluir espacios en blanco")
+      .trim("El nombre de la tela no debe incluir espacios en blanco por demas")
       .strict(true)
       .min(1, "El nombre de la tela debe contener como minimo 1 caracter")
       .max(254, "El nombre de la tela debe contener como máximo 254 caracteres")
@@ -128,7 +134,7 @@ function updateSchema() {
         "Es decimal",
         "El precio no cumple con el formato correcto de número decimal, ejemplo: '9999.99'",
         (val, options) => {
-          if (val != undefined) {
+          if (val !== undefined) {
             return REGEX_PATTERNS.price.test(options.originalValue);
           }
           return true;
@@ -138,7 +144,7 @@ function updateSchema() {
       .max(9999, "El precio debe ser menor a 9999")
       .required("El precio es obligatorio"),
     description: Yup.string()
-      .trim("La descripción no debe incluir espacios en blanco")
+      .trim("La descripción no debe incluir espacios en blanco por demas")
       .strict(true)
       .min(1, "La descripción debe contener como minimo 1 caracter")
       .max(999, "La descripción debe contener como máximo 999 caracteres"),

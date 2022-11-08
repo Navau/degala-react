@@ -15,8 +15,8 @@ export function TableProductAdmin(props) {
           <Table.HeaderCell>Producto</Table.HeaderCell>
           <Table.HeaderCell>Precio</Table.HeaderCell>
           <Table.HeaderCell>Categoría</Table.HeaderCell>
-          <Table.HeaderCell>Activo</Table.HeaderCell>
-          <Table.HeaderCell>Acciones</Table.HeaderCell>
+          <Table.HeaderCell>Estado</Table.HeaderCell>
+          <Table.HeaderCell textAlign="center">Acciones</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -48,7 +48,7 @@ function Actions(props) {
 
   return (
     <Table.Cell textAlign="right">
-      <Button icon onClick={() => updateProduct(product)}>
+      <Button icon primary onClick={() => updateProduct(product)}>
         <Icon name="pencil" />
       </Button>
       <Button icon negative onClick={() => onDeleteProduct(product)}>

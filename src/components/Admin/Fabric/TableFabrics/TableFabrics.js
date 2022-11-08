@@ -14,7 +14,7 @@ export function TableFabrics(props) {
           <Table.HeaderCell>Nombre de Tela</Table.HeaderCell>
           <Table.HeaderCell>Precio</Table.HeaderCell>
           <Table.HeaderCell>Descripción</Table.HeaderCell>
-          <Table.HeaderCell>Activo</Table.HeaderCell>
+          <Table.HeaderCell>Estado</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>

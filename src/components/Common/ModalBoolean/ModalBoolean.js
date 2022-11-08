@@ -29,7 +29,13 @@ export function ModalBoolean(props) {
     }
   };
   return (
-    <Modal className="modal-boolean" open={show} onClose={onClose} size={size}>
+    <Modal
+      className="modal-boolean"
+      open={show}
+      onClose={onClose}
+      size={size}
+      closeIcon
+    >
       {title && <Modal.Header>{title}</Modal.Header>}
       <Modal.Content>{children}</Modal.Content>
       <Modal.Actions>

@@ -11,19 +11,19 @@ import { map } from "lodash";
 import { useDropzone } from "react-dropzone";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useCategory, useFabric, useProduct } from "../../../../hooks";
+import { useCategory, useFabric, useSale } from "../../../../hooks";
 import { GENRE_PRODUCT, REGEX_PATTERNS } from "../../../../utils/constants";
 
-import "./AddEditProductForm.scss";
+import "./AddEditSaleForm.scss";
 
-export function AddEditProductForm(props) {
-  const { onClose, onRefetch, product } = props;
+export function AddEditSaleForm(props) {
+  const { onClose, onRefetch, sale } = props;
   const [categoriesFormat, setCategoriesFormat] = useState([]);
-  const [previewImage, setPreviewImage] = useState(product?.image || null);
+  const [previewImage, setPreviewImage] = useState(sale?.image || null);
   const [fabricsFormat, setFabricsFormat] = useState([]);
   const { categories, getCategories } = useCategory();
   const { fabrics, getFabrics } = useFabric();
-  const { addProduct, updateProduct } = useProduct();
+  const { addSale, updateSale } = useSale();
   useEffect(() => {
     getCategories();
   }, []);
@@ -38,14 +38,14 @@ export function AddEditProductForm(props) {
   }, [fabrics]);
 
   const formik = useFormik({
-    initialValues: initialValues(product),
-    validationSchema: Yup.object(product ? updateSchema() : newSchema()),
+    initialValues: initialValues(sale),
+    validationSchema: Yup.object(sale ? updateSchema() : newSchema()),
     validateOnChange: true,
     onSubmit: async (formValue) => {
-      if (product) {
-        await updateProduct(product.id, formValue);
+      if (sale) {
+        await updateSale(sale.id, formValue);
       } else {
-        await addProduct(formValue);
+        await addSale(formValue);
       }
       onRefetch();
       onClose();
@@ -66,12 +66,12 @@ export function AddEditProductForm(props) {
   });
 
   return (
-    <Form className="add-edit-product-form" onSubmit={formik.handleSubmit}>
+    <Form className="add-edit-sale-form" onSubmit={formik.handleSubmit}>
       <Form.Group widths="equal">
         <Form.Input
           name="title"
-          label="Nombre del Producto (*Obligatorio)"
-          placeholder="Nombre del Producto"
+          label="Nombre del Venta (*Obligatorio)"
+          placeholder="Nombre del Venta"
           value={formik.values.title}
           onChange={formik.handleChange}
           error={formik.errors.title}
@@ -135,6 +135,7 @@ export function AddEditProductForm(props) {
             value={formik.values.category}
             error={formik.errors.category}
             onChange={(_, data) => formik.setFieldValue("category", data.value)}
+            onBlur
           />
           {formik.errors.category && (
             <Label pointing prompt>
@@ -170,13 +171,13 @@ export function AddEditProductForm(props) {
         onChange={formik.handleChange}
         error={formik.errors.description}
       />
-      <div className="add-edit-product-form__active">
+      <div className="add-edit-sale-form__active">
         <Checkbox
           toggle
           checked={formik.values.active}
           onChange={(_, data) => formik.setFieldValue("active", data.checked)}
         />
-        Producto activo (*Obligatorio)
+        Venta activo (*Obligatorio)
       </div>
       <Form.Field>
         <Button
@@ -199,7 +200,7 @@ export function AddEditProductForm(props) {
         type="submit"
         primary
         fluid
-        content={product ? "Actualizar" : "Crear"}
+        content={sale ? "Actualizar" : "Crear"}
       ></Button>
     </Form>
   );
@@ -256,16 +257,11 @@ function initialValues(data) {
 function newSchema() {
   return {
     title: Yup.string()
-      .trim(
-        "El nombre del producto no debe incluir espacios en blanco por demas"
-      )
+      .trim("El nombre del venta no debe incluir espacios en blanco por demas")
       .strict(true)
-      .min(1, "El nombre del producto debe contener como mínimo 1 caracter")
-      .max(
-        254,
-        "El nombre del producto debe contener como máximo 254 caracteres"
-      )
-      .required("El nombre del producto es obligatorio"),
+      .min(1, "El nombre del venta debe contener como mínimo 1 caracter")
+      .max(254, "El nombre del venta debe contener como máximo 254 caracteres")
+      .required("El nombre del venta es obligatorio"),
     price: Yup.number()
       .typeError("El precio no es un número válido")
       .test(
@@ -346,16 +342,11 @@ function newSchema() {
 function updateSchema() {
   return {
     title: Yup.string()
-      .trim(
-        "El nombre del producto no debe incluir espacios en blanco por demas"
-      )
+      .trim("El nombre del venta no debe incluir espacios en blanco por demas")
       .strict(true)
-      .min(1, "El nombre del producto debe contener como mínimo 1 caracter")
-      .max(
-        254,
-        "El nombre del producto debe contener como máximo 254 caracteres"
-      )
-      .required("El nombre del producto es obligatorio"),
+      .min(1, "El nombre del venta debe contener como mínimo 1 caracter")
+      .max(254, "El nombre del venta debe contener como máximo 254 caracteres")
+      .required("El nombre del venta es obligatorio"),
     price: Yup.number()
       .typeError("El precio no es un número válido")
       .test(
