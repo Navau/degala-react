@@ -7,7 +7,8 @@ import {
   Dropdown,
   Label,
 } from "semantic-ui-react";
-import { map } from "lodash";
+import { forEach, map, size } from "lodash";
+import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -39,16 +40,43 @@ export function AddEditProductForm(props) {
 
   const formik = useFormik({
     initialValues: initialValues(product),
-    validationSchema: Yup.object(product ? updateSchema() : newSchema()),
+    validationSchema: Yup.object(product ? updateSchema(product) : newSchema()),
     validateOnChange: true,
     onSubmit: async (formValue) => {
-      if (product) {
-        await updateProduct(product.id, formValue);
-      } else {
-        await addProduct(formValue);
+      try {
+        if (product) {
+          const responseUpdate = await updateProduct(product.id, formValue);
+          if (responseUpdate?.err) {
+            if (size(responseUpdate.err) > 0) {
+              forEach(responseUpdate.err, (item) => {
+                forEach(item, (error) => {
+                  toast.error(error);
+                });
+              });
+            }
+          } else {
+            toast.success("Actualizado!");
+          }
+        } else {
+          const responseAdd = await addProduct(formValue);
+          if (responseAdd?.err) {
+            if (size(responseAdd.err) > 0) {
+              forEach(responseAdd.err, (item) => {
+                forEach(item, (error) => {
+                  toast.error(error);
+                });
+              });
+            }
+          } else {
+            toast.success("Registrado!");
+          }
+        }
+        onRefetch();
+        onClose();
+      } catch (err) {
+        console.log("ERROR", err);
+        toast.error(err?.message);
       }
-      onRefetch();
-      onClose();
     },
   });
 
@@ -248,7 +276,8 @@ function initialValues(data) {
     description: data?.description || "",
     category: data?.category || "",
     fabric: data?.fabric || "",
-    active: data?.active ? data.active : true,
+    active:
+      data?.active === false || data?.active === true ? data.active : false,
     image: "",
   };
 }
@@ -343,7 +372,7 @@ function newSchema() {
   };
 }
 
-function updateSchema() {
+function updateSchema(data) {
   return {
     title: Yup.string()
       .trim(
@@ -420,11 +449,19 @@ function updateSchema() {
     active: Yup.boolean().default(true).required("El activo es obligatorio"),
     image: Yup.string("La imagen no es válida").test(
       "Valor correcto",
-      "La imagen debe ser formato jpeg o png",
+      "La imagen debe ser formato jpeg, jpg o png",
       (val, optionsValue) => {
-        const typeFile = optionsValue.options.originalValue?.type;
-        if (typeFile === "image/png" || typeFile === "image/jpeg") return true;
-        return false;
+        if (!data?.image) {
+          const typeFile = optionsValue.options.originalValue?.type;
+          if (
+            typeFile?.includes("png") ||
+            typeFile?.includes("jpeg") ||
+            typeFile?.includes("jpg")
+          )
+            return true;
+          return false;
+        }
+        return true;
       }
     ),
   };

@@ -8,6 +8,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "chart.js": "^3.9.1",
+    "dayjs": "^1.11.7",
     "faker": "^6.6.6",
     "formik": "^2.2.9",
     "lodash": "^4.17.21",

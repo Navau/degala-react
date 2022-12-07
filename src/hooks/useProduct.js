@@ -4,7 +4,9 @@ import {
   deleteProductApi,
   getProductByIdApi,
   getProductsApi,
+  getProductsByCategoryIDApi,
   updateProductApi,
+  updateProductStockApi,
 } from "../api/product";
 import { useAuth } from "./useAuth";
 
@@ -27,11 +29,25 @@ export function useProduct() {
     }
   };
 
+  const getProductsByCategoryID = async (id) => {
+    try {
+      setLoading(true);
+      const response = await getProductsByCategoryIDApi(id);
+      setLoading(false);
+
+      setProducts(response);
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  };
+
   const addProduct = async (data) => {
     try {
       setLoading(true);
-      await addProductApi(data, auth.token);
+      const response = await addProductApi(data, auth.token);
       setLoading(false);
+      return response;
     } catch (err) {
       setError(err);
       setLoading(false);
@@ -41,8 +57,21 @@ export function useProduct() {
   const updateProduct = async (id, data) => {
     try {
       setLoading(true);
-      await updateProductApi(id, data, auth.token);
+      const response = await updateProductApi(id, data, auth.token);
       setLoading(false);
+      return response;
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  };
+
+  const updateProductStock = async (id, data) => {
+    try {
+      setLoading(true);
+      const response = await updateProductStockApi(id, data, auth.token);
+      setLoading(false);
+      return response;
     } catch (err) {
       setError(err);
       setLoading(false);
@@ -82,5 +111,7 @@ export function useProduct() {
     loading,
     error,
     products,
+    getProductsByCategoryID,
+    updateProductStock,
   };
 }

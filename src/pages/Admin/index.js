@@ -8,3 +8,4 @@ export * from "./ReportsAdmin";
 export * from "./StatisticsAdmin";
 export * from "./FabricsAdmin";
 export * from "./SalesAdmin";
+export * from "./Sales2Admin";

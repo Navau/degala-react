@@ -35,6 +35,9 @@ function MenuLeft(props) {
       <Menu.Item as={Link} to={"/"} active={pathname === "/"}>
         <Icon name="home" /> Inventarios
       </Menu.Item>
+      <Menu.Item as={Link} to={"/sales2"} active={pathname === "/sales2"}>
+        <Icon name="dollar sign" /> Ventas
+      </Menu.Item>
       <Menu.Item as={Link} to={"/products"} active={pathname === "/products"}>
         <Icon name="cart" /> Productos
       </Menu.Item>

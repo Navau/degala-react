@@ -15,16 +15,25 @@ export function TableFabrics(props) {
           <Table.HeaderCell>Precio</Table.HeaderCell>
           <Table.HeaderCell>Descripción</Table.HeaderCell>
           <Table.HeaderCell>Estado</Table.HeaderCell>
+          <Table.HeaderCell>Acciones</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {map(fabrics, (item, index) => (
-          <Table.Row key={index}>
+          <Table.Row key={index} className={!item.active && "no-active"}>
             <Table.Cell>{item.title}</Table.Cell>
             <Table.Cell>{item.price}</Table.Cell>
             <Table.Cell>{item.description}</Table.Cell>
             <Table.Cell className="status">
-              {item.active ? <Icon name="check" /> : <Icon name="close" />}
+              {item.active ? (
+                <>
+                  <Icon name="check" /> Activo
+                </>
+              ) : (
+                <>
+                  <Icon name="close" /> No Activo
+                </>
+              )}
             </Table.Cell>
             <Table.Cell>
               <Actions

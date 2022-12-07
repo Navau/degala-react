@@ -1944,7 +1944,7 @@ export function ReportsAdmin() {
       "corbata",
     ];
     // 99587
-    for (let indexMain = 0; indexMain < 7858; indexMain++) {
+    for (let indexMain = 0; indexMain < 25856; indexMain++) {
       const date = randomDate(
         new Date(2014, 6, 9),
         new Date(2021, 11, 31),

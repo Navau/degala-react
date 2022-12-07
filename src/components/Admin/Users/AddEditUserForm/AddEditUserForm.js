@@ -102,7 +102,7 @@ export function AddEditUserForm(props) {
           checked={formik.values.is_staff}
           onChange={(_, data) => formik.setFieldValue("is_staff", data.checked)}
         />{" "}
-        Usuario Administrador
+        Usuario Gerente
       </div>
 
       <Button
@@ -123,8 +123,14 @@ function initialValues(data) {
     first_name: data?.first_name || "",
     last_name: data?.last_name || "",
     password: "",
-    is_active: data?.is_active ? data.is_active : true,
-    is_staff: data?.is_staff ? data.is_staff : false,
+    is_active:
+      data?.is_active === false || data?.is_active === true
+        ? data.is_active
+        : false,
+    is_staff:
+      data?.is_staff === false || data?.is_staff === true
+        ? data.is_staff
+        : false,
   };
 }
 

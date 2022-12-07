@@ -1,43 +1,13 @@
 import { BASE_API } from "../utils/constants";
 
-export async function loginApi(formValue) {
+export async function getSales2Api() {
   try {
-    const url = `${BASE_API}/api/auth/login/`;
-
-    const params = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValue),
-    };
-
-    const response = await fetch(url, params);
-    const result = await response.json();
-    if (response.status !== 200) throw result;
-    return result;
-  } catch (err) {
-    throw new Error(
-      "No se encontro ningun usuario con este email o contraseña"
-    );
-  }
-}
-
-export async function getMeApi(token) {
-  try {
-    const url = `${BASE_API}/api/auth/me/`;
+    const url = `${BASE_API}/api/sales2/`;
     const params = {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
     };
 
     const response = await fetch(url, params);
-    if (response.status !== 200) {
-      throw new Error("Hubo un error al obtener la información del usuario.");
-    }
     const result = await response.json();
     return result;
   } catch (err) {
@@ -45,29 +15,10 @@ export async function getMeApi(token) {
   }
 }
 
-export async function getUsersApi(token) {
+export async function addSale2Api(data, token) {
+  console.log(data);
   try {
-    const url = `${BASE_API}/api/users/`;
-    const params = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    };
-
-    const response = await fetch(url, params);
-    const result = await response.json();
-    if (response.status !== 200) throw result;
-    return result;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-}
-
-export async function addUserApi(data, token) {
-  try {
-    const url = `${BASE_API}/api/users/`;
+    const url = `${BASE_API}/api/sales2/`;
     const params = {
       method: "POST",
       headers: {
@@ -79,15 +30,18 @@ export async function addUserApi(data, token) {
 
     const response = await fetch(url, params);
     const result = await response.json();
+    if (response.status !== 200 && response.status !== 201) throw result;
+
     return result;
   } catch (err) {
-    throw err;
+    return { err };
   }
 }
 
-export async function updateUserApi(id, data, token) {
+export async function updateSale2Api(id, data, token) {
   try {
-    const url = `${BASE_API}/api/users/${id}/`;
+    console.log(data);
+    const url = `${BASE_API}/api/sales2/${id}/`;
     const params = {
       method: "PATCH",
       headers: {
@@ -99,20 +53,38 @@ export async function updateUserApi(id, data, token) {
 
     const response = await fetch(url, params);
     const result = await response.json();
+    if (response.status !== 200 && response.status !== 201) throw result;
+
+    return result;
+  } catch (err) {
+    console.log("ERR API", err);
+    return { err };
+  }
+}
+
+export async function deleteSale2Api(id, token) {
+  try {
+    const url = `${BASE_API}/api/sales2/${id}/`;
+    const params = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await fetch(url, params);
+    const result = await response.json();
     return result;
   } catch (err) {
     throw err;
   }
 }
 
-export async function deleteUserApi(id, token) {
+export async function getSale2ByIdApi(id) {
   try {
-    const url = `${BASE_API}/api/users/${id}/`;
+    const url = `${BASE_API}/api/sales2/${id}/`;
     const params = {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      method: "GET",
     };
 
     const response = await fetch(url, params);

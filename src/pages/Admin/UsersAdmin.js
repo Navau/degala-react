@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { Loader } from "semantic-ui-react";
 import {
   HeaderPage2,
@@ -14,7 +15,8 @@ export function UsersAdmin() {
   const [contentModal, setContentModal] = useState(null);
   const [refetch, setRefetch] = useState(false);
 
-  const { loading, error, users, getUsers, deleteUser } = useUser();
+  const { loading, error, users, getUsers, deleteUser, changeStatus } =
+    useUser();
 
   useEffect(() => {
     getUsers();
@@ -51,8 +53,26 @@ export function UsersAdmin() {
       try {
         await deleteUser(data.id);
         onRefresh();
+        toast.success("Eliminado!");
       } catch (err) {
         console.log(err);
+        toast.success("Error al eliminar!");
+      }
+    }
+  };
+
+  const onChangeStatus = async (data) => {
+    const result = window.confirm(
+      `¿Estas seguro de que quieres dar de baja a ${data.email}?`
+    );
+    if (result) {
+      try {
+        const response = await changeStatus(data.id, data);
+        onRefresh();
+        toast.success("Dado de baja!");
+      } catch (err) {
+        console.log(err);
+        toast.success("Error al dar de baja!");
       }
     }
   };
@@ -73,6 +93,7 @@ export function UsersAdmin() {
           users={users}
           updateUser={updateUser}
           onDeleteUser={onDeleteUser}
+          onChangeStatus={onChangeStatus}
         />
       )}
       <ModalBasic

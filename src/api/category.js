@@ -19,6 +19,7 @@ export async function addCategoryApi(data, token) {
   try {
     const formData = new FormData();
     formData.append("image", data.image);
+    formData.append("active", data.active);
     formData.append("title", data.title);
 
     // SE ENVIAN MEDIANTE FORMDATA IMAGENES
@@ -33,9 +34,12 @@ export async function addCategoryApi(data, token) {
 
     const response = await fetch(url, params);
     const result = await response.json();
+    if (response.status !== 200 && response.status !== 201) throw result;
+
     return result;
   } catch (err) {
-    throw err;
+    console.log("ERR API", err);
+    return { err };
   }
 }
 
@@ -44,6 +48,7 @@ export async function updateCategoryApi(id, data, token) {
     const formData = new FormData();
 
     formData.append("title", data.title);
+    formData.append("active", data.active);
     if (data.image) {
       formData.append("image", data.image);
     }
@@ -59,9 +64,12 @@ export async function updateCategoryApi(id, data, token) {
 
     const response = await fetch(url, params);
     const result = await response.json();
+    if (response.status !== 200 && response.status !== 201) throw result;
+
     return result;
   } catch (err) {
-    throw err;
+    console.log("ERR API", err);
+    return { err };
   }
 }
 

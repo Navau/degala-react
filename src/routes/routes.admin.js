@@ -8,6 +8,7 @@ import {
   DemandAdmin,
   ReportsAdmin,
   StatisticsAdmin,
+  Sales2Admin,
 } from "../pages/Admin";
 
 const routesAdmin = [
@@ -50,6 +51,11 @@ const routesAdmin = [
     path: "/users",
     layout: AdminLayout,
     component: UsersAdmin,
+  },
+  {
+    path: "/sales2",
+    layout: AdminLayout,
+    component: Sales2Admin,
   },
 ];
 

@@ -29,8 +29,9 @@ export function useCategory() {
   const addCategory = async (data) => {
     try {
       setLoading(true);
-      await addCategoryApi(data, auth.token);
+      const response = await addCategoryApi(data, auth.token);
       setLoading(false);
+      return response;
     } catch (err) {
       setLoading(false);
       setError(err);
@@ -40,8 +41,9 @@ export function useCategory() {
   const updateCategory = async (id, data) => {
     try {
       setLoading(true);
-      await updateCategoryApi(id, data, auth.token);
+      const response = await updateCategoryApi(id, data, auth.token);
       setLoading(false);
+      return response;
     } catch (err) {
       setLoading(false);
       setError(err);

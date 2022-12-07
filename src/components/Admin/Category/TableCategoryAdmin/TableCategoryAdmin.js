@@ -6,27 +6,42 @@ import "./TableCategoryAdmin.scss";
 
 export function TableCategoryAdmin(props) {
   const { categories, updateCategory, onDeleteCategory } = props;
+  console.log(categories);
   return (
     <Table celled className="table-category-admin">
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Imagen</Table.HeaderCell>
           <Table.HeaderCell>Categoría</Table.HeaderCell>
+          <Table.HeaderCell>Estado</Table.HeaderCell>
           <Table.HeaderCell textAlign="center">Acciones</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {map(categories, (item, index) => (
-          <Table.Row key={index}>
+          <Table.Row key={index} className={!item.active && "no-active"}>
             <Table.Cell width={2}>
               <Image src={item.image} />
             </Table.Cell>
             <Table.Cell>{item.title}</Table.Cell>
-            <Actions
-              category={item}
-              updateCategory={updateCategory}
-              onDeleteCategory={onDeleteCategory}
-            />
+            <Table.Cell className="status">
+              {item.active ? (
+                <>
+                  <Icon name="check" /> Activo
+                </>
+              ) : (
+                <>
+                  <Icon name="close" /> No Activo
+                </>
+              )}
+            </Table.Cell>
+            <Table.Cell>
+              <Actions
+                category={item}
+                updateCategory={updateCategory}
+                onDeleteCategory={onDeleteCategory}
+              />
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>

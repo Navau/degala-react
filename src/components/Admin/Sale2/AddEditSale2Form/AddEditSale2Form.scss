@@ -1,4 +1,4 @@
-.add-edit-category-form {
+.add-edit-sale2-form {
   &__active {
     display: flex;
     align-items: center;
@@ -9,13 +9,14 @@
       margin-right: 20px;
     }
   }
+
   .ui.image {
     margin-top: 10px;
+    width: 200px;
+    margin: 0 auto;
   }
-  .ui.primary.button {
+
+  .ui.button.primary {
     margin-top: 50px;
-  }
-  .ui.fluid.button {
-    margin-top: 10px;
   }
 }

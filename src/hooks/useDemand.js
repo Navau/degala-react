@@ -4,6 +4,7 @@ import { useAuth } from "./";
 
 export function useDemand() {
   const [loading, setLoading] = useState(true);
+  const [loadingPredict, setLoadingPredict] = useState(true);
   const [error, setError] = useState(false);
   const [demand, setDemand] = useState(null);
   const [predict, setPredict] = useState(null);
@@ -34,6 +35,7 @@ export function useDemand() {
 
   return {
     loading,
+    loadingPredict,
     error,
     demand,
     predict,

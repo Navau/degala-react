@@ -5,6 +5,7 @@ import {
   addUserApi,
   updateUserApi,
   deleteUserApi,
+  changeStatusApi,
 } from "../api/user";
 import { useAuth } from ".";
 
@@ -58,6 +59,17 @@ export function useUser() {
     }
   };
 
+  const changeStatus = async (id, data) => {
+    try {
+      setLoading(true);
+      const response = await changeStatusApi(id, data, auth.token);
+      setLoading(false);
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const deleteUser = async (id) => {
     try {
       setLoading(true);
@@ -77,5 +89,6 @@ export function useUser() {
     loading,
     error,
     users,
+    changeStatus,
   };
 }
