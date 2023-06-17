@@ -1,0 +1,30 @@
+@import "../../../../scss/colors.scss";
+
+.statistical-demand {
+  display: flex;
+  justify-content: space-around;
+
+  &__products,
+  &__sales {
+    border-radius: 25px;
+    box-shadow: 0 7px 3px $black-transparent;
+    transition: transform 0.3s ease;
+    width: 40%;
+    background-color: $dark;
+    padding: 20px;
+    &:hover {
+      transform: translateY(-5px);
+    }
+    .value {
+      font-size: 3rem !important;
+      color: $light !important;
+    }
+    .label {
+      margin-top: 15px !important;
+      color: $white !important;
+    }
+    span {
+      font-weight: bolder;
+    }
+  }
+}

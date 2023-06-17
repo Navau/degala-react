@@ -1,0 +1,37 @@
+@import "../../../../scss/colors.scss";
+.container-predict-demand {
+  background-color: $white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 2px 0 $black-transparent, 0 1px 5px 0 $black-transparent,
+    0 3px 1px -2px $black-transparent;
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .form-predict-demand {
+    &__grid-inputs {
+      margin-bottom: 15px !important;
+      .range-dates {
+        border-radius: 25px;
+        border: 1px solid $black-transparent;
+        .label-error-admin {
+          color: $error;
+          background-color: $real-white;
+          border: 1px solid $border-error;
+        }
+      }
+    }
+    .field {
+      margin-bottom: 15px !important;
+
+      .months-options,
+      .years-options {
+        .visible.menu.transition {
+          height: 100px;
+        }
+      }
+    }
+  }
+}

@@ -4,7 +4,8 @@
   display: grid;
   grid: 50px / 1fr;
   grid-template-areas: "menu" "content";
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 100%;
 
   &__menu {
     grid-area: menu;
@@ -15,5 +16,8 @@
   &__main-content {
     grid-area: content;
     background-color: $white !important;
+    height: fit-content;
+    min-height: 100%;
+    overflow: hidden;
   }
 }

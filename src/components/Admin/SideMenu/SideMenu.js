@@ -32,9 +32,9 @@ function MenuLeft(props) {
       >
         <Image src={Logo} />
       </Menu.Item>
-      <Menu.Item as={Link} to={"/"} active={pathname === "/"}>
+      {/* <Menu.Item as={Link} to={"/"} active={pathname === "/"}>
         <Icon name="home" /> Inventarios
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item as={Link} to={"/sales2"} active={pathname === "/sales2"}>
         <Icon name="dollar sign" /> Ventas
       </Menu.Item>
@@ -54,7 +54,7 @@ function MenuLeft(props) {
       <Menu.Item as={Link} to={"/demand"} active={pathname === "/demand"}>
         <Icon name="history" /> Demanda
       </Menu.Item>
-      <Menu.Item
+      {/* <Menu.Item
         as={Link}
         to={"/statistics"}
         active={pathname === "/statistics"}
@@ -63,7 +63,7 @@ function MenuLeft(props) {
       </Menu.Item>
       <Menu.Item as={Link} to={"/reports"} active={pathname === "/reports"}>
         <Icon name="newspaper" /> Reportes
-      </Menu.Item>
+      </Menu.Item> */}
       {auth.me?.is_staff && (
         <Menu.Item as={Link} to={"/users"} active={pathname === "/users"}>
           <Icon name="users" /> Usuarios

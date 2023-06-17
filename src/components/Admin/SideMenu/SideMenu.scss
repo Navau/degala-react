@@ -8,7 +8,7 @@
       width: 250px !important;
     }
   }
-  .ui.menu {
+  .ui.vertical.left.menu {
     background-color: $dark !important;
     width: 250px !important;
     overflow: hidden;
@@ -34,9 +34,10 @@
   }
 
   .content {
-    position: absolute;
-    right: 0;
     padding: 30px;
     width: calc(100% - 250px);
+    margin-right: -260px;
+    margin-left: 250px;
+    overflow: hidden;
   }
 }

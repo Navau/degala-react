@@ -1,0 +1,24 @@
+@import "../../../../scss/colors.scss";
+.statistical-charts-demand {
+  display: flex;
+  flex-direction: column;
+  .sales-predict {
+    width: 100%;
+    height: max-content;
+  }
+  .products-predict {
+    width: 100%;
+    height: max-content;
+  }
+
+  .sales-predict,
+  .products-predict {
+    box-shadow: 0 2px 2px 0 $black-transparent, 0 1px 5px 0 $black-transparent,
+      0 3px 1px -2px $black-transparent;
+
+    transition: transform 0.3s ease;
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
