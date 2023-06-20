@@ -18,14 +18,18 @@ import { isUndefined, size } from "lodash";
 import dayjs from "dayjs";
 
 export function FormPredictDemand(props) {
-  const {} = props;
-  const { getDemandPredictByRangeDate } = useDemand();
+  const {
+    setDemandPredictionInfo,
+    scrollToSection,
+    predictType,
+    setPredictType,
+  } = props;
+  const { getDemandPredictByRangeDate, loadingDemand } = useDemand();
   const [errorRangeDates, setErrorRangeDates] = useState("");
-  const [predictTypeInputs, setPredictTypeInputs] = useState("month");
 
   const formik = useFormik({
-    initialValues: initialValues(predictTypeInputs),
-    validationSchema: validationSchema(predictTypeInputs),
+    initialValues: initialValues(predictType),
+    validationSchema: validationSchema(predictType),
     validateOnChange: true,
     onSubmit: async (formValue) => {
       try {
@@ -50,15 +54,17 @@ export function FormPredictDemand(props) {
           : `${formValue.toYear}-01`;
 
         const predictDemand =
-          predictTypeInputs === "month"
+          predictType === "month"
             ? await getDemandPredictByRangeDate(fromDate, toDate)
             : null;
-        console.log({ predictDemand });
+        setDemandPredictionInfo(predictDemand);
+        scrollToSection();
       } catch (err) {
         toast.error(err?.message || "Error del servidor");
       }
     },
   });
+
   return (
     <>
       <Header>Formulario de Pronóstico</Header>
@@ -81,12 +87,12 @@ export function FormPredictDemand(props) {
                     value={formik.values.predictType}
                     onChange={(_, data) => {
                       formik.setFieldValue("predictType", data.value);
-                      setPredictTypeInputs((prev) => {
+                      setPredictType((prev) => {
                         if (prev === "month") return "year";
                         if (prev === "year") return "month";
                       });
                     }}
-                    error={formik.errors.predictType}
+                    error={!isUndefined(formik.errors.predictType)}
                   />
                 </Form.Field>
               </Grid.Column>
@@ -95,12 +101,12 @@ export function FormPredictDemand(props) {
                   <Grid.Row>
                     <Grid.Column width={16}>
                       <Header as="h4" textAlign="center">
-                        SELECCION DE RANGO DE FECHAS
+                        Selección de rango de fechas
                       </Header>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    {predictTypeInputs === "month" ? (
+                    {predictType === "month" ? (
                       <>
                         <Grid.Column width={8}>
                           <MonthsFieldsFrom formik={formik} />
@@ -133,7 +139,13 @@ export function FormPredictDemand(props) {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-          <Form.Button type="submit" primary fluid content="Pronosticar" />
+          <Form.Button
+            type="submit"
+            primary
+            fluid
+            content="Pronosticar"
+            loading={loadingDemand}
+          />
         </Form>
       </Container>
     </>
@@ -155,7 +167,7 @@ function MonthsFieldsFrom(props) {
         options={monthsOptions()}
         value={formik.values.fromMonth}
         onChange={(_, data) => formik.setFieldValue("fromMonth", data.value)}
-        error={formik.errors.fromMonth}
+        error={!isUndefined(formik.errors.fromMonth)}
       />
       {formik.errors.fromMonth && (
         <Label pointing prompt>
@@ -173,7 +185,7 @@ function MonthsFieldsFrom(props) {
         options={yearsOptions()}
         value={formik.values.fromYear}
         onChange={(_, data) => formik.setFieldValue("fromYear", data.value)}
-        error={formik.errors.fromYear}
+        error={!isUndefined(formik.errors.fromYear)}
       />
       {formik.errors.fromYear && (
         <Label pointing prompt>
@@ -199,7 +211,7 @@ function MonthsFieldsTo(props) {
         options={monthsOptions()}
         value={formik.values.toMonth}
         onChange={(_, data) => formik.setFieldValue("toMonth", data.value)}
-        error={formik.errors.toMonth}
+        error={!isUndefined(formik.errors.toMonth)}
       />
       {formik.errors.toMonth && (
         <Label pointing prompt>
@@ -217,7 +229,7 @@ function MonthsFieldsTo(props) {
         options={yearsOptions()}
         value={formik.values.toYear}
         onChange={(_, data) => formik.setFieldValue("toYear", data.value)}
-        error={formik.errors.toYear}
+        error={!isUndefined(formik.errors.toYear)}
       />
       {formik.errors.toYear && (
         <Label pointing prompt>
@@ -243,7 +255,7 @@ function YearsFieldsFrom(props) {
         options={yearsOptions()}
         value={formik.values.fromYear}
         onChange={(_, data) => formik.setFieldValue("fromYear", data.value)}
-        error={formik.errors.fromYear}
+        error={!isUndefined(formik.errors.fromYear)}
       />
       {formik.errors.fromYear && (
         <Label pointing prompt>
@@ -269,7 +281,7 @@ function YearsFieldsTo(props) {
         options={yearsOptions()}
         value={formik.values.toYear}
         onChange={(_, data) => formik.setFieldValue("toYear", data.value)}
-        error={formik.errors.toYear}
+        error={!isUndefined(formik.errors.toYear)}
       />
       {formik.errors.toYear && (
         <Label pointing prompt>

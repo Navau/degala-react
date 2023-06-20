@@ -10,7 +10,7 @@
     transform: translateY(-5px);
   }
   .ui.tabular.vertical.menu {
-    height: 400px;
+    height: max-content;
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -41,5 +41,59 @@
     &:hover {
       transform: translateY(-5px);
     }
+  }
+
+  .grid-tab-pane-detail-predict {
+    margin: 0;
+    .divider-detail {
+      margin: 0.5rem !important;
+    }
+    .row {
+      padding: 0px 20px !important;
+      .column-detail-title,
+      .column-detail-main-title,
+      .column-detail-description,
+      .column-detail-description-greater,
+      .column-detail-description-neutral,
+      .column-detail-description-lesser {
+        word-wrap: break-word;
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        align-items: center;
+        text-align: center;
+        padding: 10px 10px;
+        border: $dark 1.5px solid;
+      }
+      .column-detail-main-title {
+        background-color: $dark-light;
+        color: $white;
+        font-weight: bold;
+        padding: 0;
+        font-size: 1.1rem;
+      }
+      .column-detail-title {
+        background-color: $dark-light;
+        color: $white;
+        font-weight: bold;
+      }
+      .column-detail-description {
+        background-color: $white;
+        color: $dark;
+        font-size: 1.1rem;
+        &-greater {
+          color: $white;
+          background-color: $greaterColor;
+        }
+        &-lesser {
+          color: $white;
+          background-color: $lesserColor;
+        }
+      }
+    }
+  }
+
+  .active.tab {
+    background-color: $info !important;
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  getAllDemandApi,
   getDemandByRangeDateApi,
   getDemandPredictApi,
   getDemandPredictByMonthApi,
@@ -9,18 +10,31 @@ import { useAuth } from "./";
 
 export function useDemand() {
   const [loading, setLoading] = useState(true);
+  const [loadingDemand, setLoadingDemand] = useState(false);
   const [loadingPredict, setLoadingPredict] = useState(true);
   const [error, setError] = useState(false);
   const [demand, setDemand] = useState([]);
+  const [allDemand, setAllDemand] = useState([]);
   const [predict, setPredict] = useState(null);
   const { auth } = useAuth();
+
+  const getAllDemand = async () => {
+    try {
+      setLoading(true);
+      const response = await getAllDemandApi();
+      setLoading(false);
+      setAllDemand(response);
+    } catch (err) {
+      setLoading(false);
+      throw err;
+    }
+  };
 
   const getDemandByRangeDate = async (fromDate, toDate) => {
     try {
       setLoading(true);
       const response = await getDemandByRangeDateApi(fromDate, toDate);
       setLoading(false);
-      // setDemand(response);
       return response;
     } catch (err) {
       setLoading(false);
@@ -30,13 +44,13 @@ export function useDemand() {
 
   const getDemandPredictByRangeDate = async (fromDate, toDate) => {
     try {
-      setLoading(true);
+      setLoadingDemand(true);
       const response = await getDemandPredictByRangeDateApi(fromDate, toDate);
-      setLoading(false);
+      setLoadingDemand(false);
       // setDemand(response);
       return response;
     } catch (err) {
-      setLoading(false);
+      setLoadingDemand(false);
       throw err;
     }
   };
@@ -71,9 +85,12 @@ export function useDemand() {
     error,
     demand,
     predict,
+    allDemand,
     getDemandPredict,
     getDemandPredictByMonth,
     getDemandByRangeDate,
     getDemandPredictByRangeDate,
+    getAllDemand,
+    loadingDemand,
   };
 }

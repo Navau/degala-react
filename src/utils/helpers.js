@@ -9,8 +9,18 @@ import {
   Tooltip,
   Legend,
   Filler,
+  registerables,
 } from "chart.js";
-import { filter, isNull, isUndefined } from "lodash";
+import {
+  concat,
+  filter,
+  forEach,
+  isNull,
+  isUndefined,
+  map,
+  size,
+  sortBy,
+} from "lodash";
 
 ChartJS.register(
   CategoryScale,
@@ -21,117 +31,178 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  ...registerables
 );
 
-export const chartsOptions = {
-  optionsline: {
-    fill: false,
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: "top",
+export const chartsOptions = (typeData) => {
+  return {
+    optionsline: {
+      fill: false,
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        x: {
+          title: {
+            color: "black",
+            display: true,
+            text: "Fechas",
+            color: "#0a0a0a",
+            font: {
+              weight: "bold",
+            },
+          },
+          grid: {
+            color: "#d6bfdb",
+          },
+          ticks: {
+            color: "#0a0a0a",
+          },
+        },
+        y: {
+          title: {
+            color: "black",
+            display: true,
+            text:
+              typeData === "products"
+                ? "Cantidad de Productos"
+                : "Cantidad de Ventas en Bs",
+            color: "#0a0a0a",
+            font: {
+              weight: "bold",
+            },
+          },
+          ticks: {
+            color: "#0a0a0a",
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: {
+            font: {
+              weight: "bold",
+            },
+          },
+        },
+        decimation: {
+          enabled: true,
+          algorithm: "max",
+        },
       },
     },
-  },
-  optionsPie: {
-    fill: false,
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "right",
+    optionsPie: {
+      fill: false,
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "right",
+        },
       },
     },
-  },
+  };
 };
 
-export const labels = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-];
+export function chartsData(demand, dataset) {
+  const dates = map(demand, (predict) => predict.date);
+  const sales = map(demand, (predict) => predict.sales);
+  const quantitys = map(demand, (predict) => predict.quantity);
 
-export function chartsData(props) {
-  const { products, sales } = props;
-  const data = {
-    dataSales: {
-      labels: sales?.month,
-      datasets: [
-        {
-          label: "Ventas",
-          data: sales?.sales,
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-          tension: 0.3,
-        },
-        {
-          label: "Pronóstico",
-          data: sales?.pred_value,
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-          tension: 0.3,
-        },
-        {
+  const salesDataset = map(dataset, (values) => values.sales);
+  const quantityDataset = map(dataset, (values) => values.quantity);
+  const datesDataset = map(dataset, (values) => values.date);
+
+  const combinedDatesArray = concat(datesDataset, dates).filter(
+    (value, index, self) => self.indexOf(value) === index
+  );
+  const sortedDatesArray = sortBy(combinedDatesArray);
+  const datesFinal = size(dataset) > 0 ? sortedDatesArray : dates;
+
+  const fixSales = sales;
+  const fixQuantity = quantitys;
+  forEach(dataset, () => {
+    fixSales.unshift(NaN);
+    fixQuantity.unshift(NaN);
+  });
+  const salesFinal = size(dataset) > 0 ? fixSales : sales;
+  const quantityFinal = size(dataset) > 0 ? fixQuantity : quantitys;
+
+  const salesDatasetChartLine = [
+    {
+      label: "Pronóstico de ventas",
+      data: salesFinal,
+      borderColor: "#15002d",
+      backgroundColor: "#d6bfdb",
+      tension: 0.3,
+      pointRadius: 6,
+    },
+    size(dataset) > 0
+      ? {
           label: "Valores Reales",
-          data: sales?.real_value,
+          data: salesDataset,
           borderColor: "rgb(255, 162, 0)",
           backgroundColor: "rgb(255, 162, 0, 0.5)",
           tension: 0.3,
-        },
-      ],
+          pointRadius: 6,
+        }
+      : null,
+  ].filter(Boolean);
+
+  const quantityDatasetChartLine = [
+    {
+      label: "Pronóstico de cantidad de productos",
+      data: quantityFinal,
+      borderColor: "#15002d",
+      backgroundColor: "#d6bfdb",
+      tension: 0.5,
+      pointRadius: 6,
     },
-    dataProducts: {
-      labels: products?.month,
+    size(dataset) > 0
+      ? {
+          label: "Valores Reales",
+          data: quantityDataset,
+          borderColor: "#007BFF",
+          backgroundColor: "rgba(0, 123, 255, 0.5)",
+          tension: 0.3,
+          pointRadius: 6,
+        }
+      : null,
+  ].filter(Boolean);
+
+  const backgroundColorsPie = generateRandomBackgroundColors(size(dates));
+  const borderColorsPie = generateRandomBorderColors(size(dates));
+
+  const data = {
+    dataLineSales: {
+      labels: datesFinal,
+      datasets: salesDatasetChartLine,
+    },
+    dataLineProducts: {
+      labels: datesFinal,
+      datasets: quantityDatasetChartLine,
+    },
+    dataPieSales: {
+      labels: dates,
       datasets: [
         {
-          label: "Ventas",
-          data: products?.products,
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-          tension: 0.3,
-        },
-        {
-          label: "Pronóstico",
-          data: products?.pred_value,
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-          tension: 0.3,
+          label: "Cantidad de Ventas",
+          data: sales,
+          backgroundColor: backgroundColorsPie,
+          borderColor: borderColorsPie,
+          borderWidth: 1,
         },
       ],
     },
-    dataPie: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    dataPieQuantity: {
+      labels: dates,
       datasets: [
         {
           label: "Cantidad de Productos",
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)",
-          ],
-          borderColor: [
-            "rgba(255, 99, 132, 1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)",
-          ],
+          data: sales,
+          backgroundColor: backgroundColorsPie,
+          borderColor: borderColorsPie,
           borderWidth: 1,
         },
       ],
@@ -180,3 +251,57 @@ export const yearsOptions = (startDate = new Date()) => {
     return { key: year, text: year.toString(), value: year.toString() };
   });
 };
+
+export const getClassForValue = (value1, value2) => {
+  if (value2 > value1) return "-greater"; // Clase CSS para valor mayor
+  else if (value2 < value1) return "-lesser"; // Clase CSS para valor menor
+  else return ""; // Clase CSS para valor neutral
+};
+
+export const moneyFormatter = new Intl.NumberFormat("es-BO", {
+  style: "currency",
+  currency: "BOB",
+});
+
+export const percentageFormatter = new Intl.NumberFormat("es-BO", {
+  style: "percent",
+  // minimumFractionDigits: 2,
+});
+
+export const unitsFormatter = new Intl.NumberFormat("es-BO");
+
+export const generateRandomBackgroundColors = (numColors) => {
+  const colors = [];
+
+  for (let i = 0; i < numColors; i++) {
+    const randomColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(
+      Math.random() * 256
+    )}, ${Math.floor(Math.random() * 256)}, 0.2)`;
+    colors.push(randomColor);
+  }
+
+  return colors;
+};
+
+export const generateRandomBorderColors = (numColors) => {
+  const colors = [];
+
+  for (let i = 0; i < numColors; i++) {
+    // const randomColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(
+    //   Math.random() * 256
+    // )}, ${Math.floor(Math.random() * 256)}, 1)`;
+    const randomColor = "rgba(10,10,10,1)";
+    colors.push(randomColor);
+  }
+
+  return colors;
+};
+
+export const typeChartOptions = [
+  { key: "line", value: "line", text: "Línea" },
+  { key: "bar", value: "bar", text: "Barras" },
+  { key: "radar", value: "radar", text: "Radar" },
+  { key: "doughnut", value: "doughnut", text: "Donut" },
+  { key: "pie", value: "pie", text: "Pastel" },
+  { key: "polarArea", value: "polarArea", text: "Área Polar" },
+];

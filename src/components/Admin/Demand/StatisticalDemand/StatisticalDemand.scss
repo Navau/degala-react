@@ -16,8 +16,13 @@
       transform: translateY(-5px);
     }
     .value {
-      font-size: 3rem !important;
+      word-wrap: break-word;
       color: $light !important;
+      span,
+      i {
+        text-transform: none;
+        font-size: 2.5rem;
+      }
     }
     .label {
       margin-top: 15px !important;
