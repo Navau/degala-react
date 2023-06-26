@@ -15,11 +15,13 @@ import {
   concat,
   filter,
   forEach,
+  groupBy,
   isNull,
   isUndefined,
   map,
   size,
   sortBy,
+  sumBy,
 } from "lodash";
 
 ChartJS.register(
@@ -305,3 +307,26 @@ export const typeChartOptions = [
   { key: "pie", value: "pie", text: "Pastel" },
   { key: "polarArea", value: "polarArea", text: "Área Polar" },
 ];
+
+export const yearDataTransform = (data) => {
+  const dataByYear = groupBy(data, (item) => item.date.slice(0, 4));
+  return map(dataByYear, (yearData, year) => {
+    const totalSales = sumBy(yearData, (yearItem) =>
+      parseFloat(yearItem.sales)
+    );
+    const totalQuantity = sumBy(yearData, (yearItem) =>
+      parseFloat(yearItem.quantity)
+    );
+    return {
+      date: year,
+      sales: totalSales.toFixed(2),
+      quantity: totalQuantity.toFixed(2),
+    };
+  });
+};
+
+export const getCurrentPageData = (data, currentPage, dataPerPage) => {
+  const startIndex = (currentPage - 1) * dataPerPage;
+  const endIndex = startIndex + dataPerPage;
+  return data?.slice(startIndex, endIndex) || [];
+};

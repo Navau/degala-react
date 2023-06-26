@@ -4,6 +4,7 @@ import {
   deleteSale2Api,
   getSale2ByIdApi,
   getSales2Api,
+  searchSales2Api,
   updateSale2Api,
 } from "../api/sales2";
 import { useAuth } from "./useAuth";
@@ -22,8 +23,21 @@ export function useSale2() {
 
       setSales2(response);
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
+    }
+  };
+
+  const searchSales2 = async (search) => {
+    try {
+      setLoading(true);
+      const response = await searchSales2Api(search);
+      setLoading(false);
+
+      setSales2(response);
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
   };
 
@@ -34,8 +48,8 @@ export function useSale2() {
       setLoading(false);
       return response;
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -46,8 +60,8 @@ export function useSale2() {
       setLoading(false);
       return response;
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -57,8 +71,8 @@ export function useSale2() {
       await deleteSale2Api(id, auth.token);
       setLoading(false);
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -71,7 +85,7 @@ export function useSale2() {
       return response;
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -84,5 +98,6 @@ export function useSale2() {
     loading,
     error,
     sales2,
+    searchSales2,
   };
 }

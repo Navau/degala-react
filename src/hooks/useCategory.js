@@ -4,6 +4,7 @@ import {
   addCategoryApi,
   updateCategoryApi,
   deleteCategoryApi,
+  searchCategoriesApi,
 } from "../api/category";
 import { useAuth } from "./";
 
@@ -22,7 +23,20 @@ export function useCategory() {
       setCategories(response);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
+    }
+  };
+
+  const searchCategories = async (search) => {
+    try {
+      setLoading(true);
+      const response = await searchCategoriesApi(search);
+      setLoading(false);
+
+      setCategories(response);
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
   };
 
@@ -34,7 +48,7 @@ export function useCategory() {
       return response;
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -46,7 +60,7 @@ export function useCategory() {
       return response;
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -57,7 +71,7 @@ export function useCategory() {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -69,5 +83,6 @@ export function useCategory() {
     loading,
     error,
     categories,
+    searchCategories,
   };
 }

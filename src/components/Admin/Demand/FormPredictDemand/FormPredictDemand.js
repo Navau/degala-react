@@ -12,9 +12,13 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { initialValues, validationSchema } from "./FormPredictDemand.validate";
 import "./FormPredictDemand.scss";
-import { monthsOptions, yearsOptions } from "../../../../utils/helpers";
-import { useDemand } from "../../../../hooks";
-import { isUndefined, size } from "lodash";
+import {
+  monthsOptions,
+  yearDataTransform,
+  yearsOptions,
+} from "../../../../utils/helpers";
+import { useDataset, useDemand } from "../../../../hooks";
+import { forEach, groupBy, isUndefined, map, size, sumBy } from "lodash";
 import dayjs from "dayjs";
 
 export function FormPredictDemand(props) {
@@ -53,14 +57,21 @@ export function FormPredictDemand(props) {
           ? `${formValue.toYear}-${formValue.toMonth}`
           : `${formValue.toYear}-01`;
 
-        const predictDemand =
+        const predictDemand = await getDemandPredictByRangeDate(
+          fromDate,
+          toDate
+        );
+        let predictDemandFinal =
           predictType === "month"
-            ? await getDemandPredictByRangeDate(fromDate, toDate)
-            : null;
-        setDemandPredictionInfo(predictDemand);
+            ? predictDemand
+            : yearDataTransform(predictDemand);
+
+        setDemandPredictionInfo(predictDemandFinal);
         scrollToSection();
       } catch (err) {
-        toast.error(err?.message || "Error del servidor");
+        toast.error(
+          err?.message || err?.detail || "Error al obtener la demanda"
+        );
       }
     },
   });

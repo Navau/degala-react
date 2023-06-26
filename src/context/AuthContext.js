@@ -1,6 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import { setToken, getToken, removeToken } from "../api/token";
 import { useUser } from "../hooks";
+import { LoaderAuth } from "../components/Auth";
+import { Grid, Transition } from "semantic-ui-react";
 
 export const AuthContext = createContext({
   auth: undefined,
@@ -10,7 +12,8 @@ export const AuthContext = createContext({
 
 export function AuthProvider(props) {
   const { children } = props;
-  const [auth, setAuth] = useState(undefined);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [auth, setAuth] = useState(null);
   const { getMe } = useUser();
 
   useEffect(() => {
@@ -22,6 +25,7 @@ export function AuthProvider(props) {
       } else {
         setAuth(null);
       }
+      setLoadingAuth(false);
     })();
   }, []);
 
@@ -44,9 +48,15 @@ export function AuthProvider(props) {
     logout,
   };
 
-  if (auth === undefined) return <h1>Cargando...</h1>;
-
   return (
-    <AuthContext.Provider value={valueContext}>{children}</AuthContext.Provider>
+    <>
+      {loadingAuth ? (
+        <LoaderAuth />
+      ) : (
+        <AuthContext.Provider value={valueContext}>
+          {children}
+        </AuthContext.Provider>
+      )}
+    </>
   );
 }

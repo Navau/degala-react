@@ -4,30 +4,12 @@ import { Modal, Button, Icon } from "semantic-ui-react";
 import "./ModalBoolean.scss";
 
 export function ModalBoolean(props) {
-  const {
-    show,
-    size,
-    title,
-    children,
-    onRefetch,
-    onClose,
-    deleteFunction,
-    data,
-  } = props;
+  const { show, size, title, children, onClose, actions } = props;
 
   const onCancel = () => {
     onClose();
   };
 
-  const onConfirm = async () => {
-    try {
-      await deleteFunction(data.id);
-      onRefetch();
-      onClose();
-    } catch (err) {
-      console.log(err);
-    }
-  };
   return (
     <Modal
       className="modal-boolean"
@@ -39,11 +21,13 @@ export function ModalBoolean(props) {
       {title && <Modal.Header>{title}</Modal.Header>}
       <Modal.Content>{children}</Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={onCancel}>
-          <Icon name="remove" /> No eliminar
+        <Button color="black" onClick={actions?.cancel?.onClick || onCancel}>
+          <Icon name={actions?.cancel?.iconName || "cancel"} />{" "}
+          {actions?.cancel?.title || "No"}
         </Button>
-        <Button color="red" onClick={onConfirm}>
-          <Icon name="checkmark" /> Si, deseo eliminar
+        <Button color="red" onClick={actions?.ok?.onClick || onCancel}>
+          <Icon name={actions?.ok?.iconName || "check"} />{" "}
+          {actions?.ok?.title || "Si"}
         </Button>
       </Modal.Actions>
     </Modal>

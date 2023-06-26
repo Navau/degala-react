@@ -13,3 +13,11 @@ export const GENRE_PRODUCT = {
   UNDEFINED: "UNDEFINED",
   OTHER: "OTHER",
 };
+
+export const PAGES_PER_DATA = {
+  users: 5,
+  sales: 5,
+  products: 5,
+  categories: 5,
+  fabrics: 5,
+};

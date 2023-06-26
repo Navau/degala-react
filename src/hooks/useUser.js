@@ -6,6 +6,7 @@ import {
   updateUserApi,
   deleteUserApi,
   changeStatusApi,
+  searchUsersApi,
 } from "../api/user";
 import { useAuth } from ".";
 
@@ -34,7 +35,20 @@ export function useUser() {
       setUsers(response);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
+    }
+  };
+
+  const searchUsers = async (search) => {
+    try {
+      setLoading(true);
+      const response = await searchUsersApi(search, auth.token);
+      setLoading(false);
+
+      setUsers(response);
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
   };
 
@@ -45,7 +59,7 @@ export function useUser() {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -55,7 +69,7 @@ export function useUser() {
       await updateUserApi(id, data, auth.token);
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   };
 
@@ -66,7 +80,7 @@ export function useUser() {
       setLoading(false);
       return response;
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   };
 
@@ -76,7 +90,7 @@ export function useUser() {
       await deleteUserApi(id, auth.token);
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   };
 
@@ -90,5 +104,6 @@ export function useUser() {
     error,
     users,
     changeStatus,
+    searchUsers,
   };
 }

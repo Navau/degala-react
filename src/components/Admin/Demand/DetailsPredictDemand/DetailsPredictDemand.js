@@ -44,13 +44,23 @@ export function DetailsPredictDemand(props) {
       nextSalesSeasonalTrend: "-",
       previousQuantitySeasonalTrend: "-",
       nextQuantitySeasonalTrend: "-",
-      previousDate: dayjs(currentDate + "-01")
-        .subtract(1, "month")
-        .format("YYYY-MM"),
+      previousDate:
+        predictType === "month"
+          ? dayjs(currentDate + "-01")
+              .subtract(1, "month")
+              .format("YYYY-MM")
+          : dayjs(currentDate + "-01")
+              .subtract(1, "year")
+              .format("YYYY"),
       currentDate,
-      nextDate: dayjs(currentDate + "-01")
-        .add(1, "month")
-        .format("YYYY-MM"),
+      nextDate:
+        predictType === "month"
+          ? dayjs(currentDate + "-01")
+              .add(1, "month")
+              .format("YYYY-MM")
+          : dayjs(currentDate + "-01")
+              .add(1, "year")
+              .format("YYYY"),
     };
 
     // Cálculo de la variación porcentual
@@ -99,12 +109,11 @@ export function DetailsPredictDemand(props) {
       else PARAMS_PREDICT.previousSalesSeasonalTrend = "Sin cambios";
 
       if (PARAMS_PREDICT.currentQuantity > PARAMS_PREDICT.previousQuantity)
-        PARAMS_PREDICT.previousSalesSeasonalTrend = "Aumento";
+        PARAMS_PREDICT.previousQuantitySeasonalTrend = "Aumento";
       else if (PARAMS_PREDICT.currentQuantity < PARAMS_PREDICT.previousQuantity)
-        PARAMS_PREDICT.previousSalesSeasonalTrend = "Disminución";
-      else PARAMS_PREDICT.previousSalesSeasonalTrend = "Sin cambios";
+        PARAMS_PREDICT.previousQuantitySeasonalTrend = "Disminución";
+      else PARAMS_PREDICT.previousQuantitySeasonalTrend = "Sin cambios";
     }
-
     if (nextPredict) {
       if (PARAMS_PREDICT.nextSales > PARAMS_PREDICT.currentSales)
         PARAMS_PREDICT.nextSalesSeasonalTrend = "Aumento";
@@ -203,16 +212,13 @@ export function DetailsPredictDemand(props) {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classPreviousValue}`}
               >
                 {PARAMS_PREDICT.previousSalesVariation}
               </Grid.Column>
-              <Grid.Column width={6} className={`column-detail-description`}>
-                {percentageFormatter.format(0)}
-              </Grid.Column>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classNextValue}`}
               >
                 {PARAMS_PREDICT.nextSalesVariation}
@@ -226,16 +232,13 @@ export function DetailsPredictDemand(props) {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classPreviousValue}`}
               >
                 {PARAMS_PREDICT.previousSalesSeasonalTrend}
               </Grid.Column>
-              <Grid.Column width={6} className={`column-detail-description`}>
-                -
-              </Grid.Column>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classNextValue}`}
               >
                 {PARAMS_PREDICT.nextSalesSeasonalTrend}
@@ -293,16 +296,13 @@ export function DetailsPredictDemand(props) {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classPreviousValue}`}
               >
                 {PARAMS_PREDICT.previousQuantityVariation}
               </Grid.Column>
-              <Grid.Column width={6} className={`column-detail-description`}>
-                {percentageFormatter.format(0)}
-              </Grid.Column>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classNextValue}`}
               >
                 {PARAMS_PREDICT.nextQuantityVariation}
@@ -316,16 +316,13 @@ export function DetailsPredictDemand(props) {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classPreviousValue}`}
               >
                 {PARAMS_PREDICT.previousQuantitySeasonalTrend}
               </Grid.Column>
-              <Grid.Column width={6} className={`column-detail-description`}>
-                -
-              </Grid.Column>
               <Grid.Column
-                width={5}
+                width={8}
                 className={`column-detail-description${classNextValue}`}
               >
                 {PARAMS_PREDICT.nextQuantitySeasonalTrend}
@@ -356,7 +353,7 @@ export function DetailsPredictDemand(props) {
           />
           <Divider />
         </Grid.Column>
-        <Grid.Column width={16}>
+        {/* <Grid.Column width={16}>
           <Grid.Row>
             <Header>Detalles del Pronóstico Ventas</Header>
             <Divider />
@@ -384,7 +381,7 @@ export function DetailsPredictDemand(props) {
               />
             </Container>
           </Grid.Row>
-        </Grid.Column>
+        </Grid.Column> */}
       </Grid.Row>
     </Grid>
   );

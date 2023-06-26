@@ -3,6 +3,7 @@ import {
   addFabricApi,
   deleteFabricApi,
   getFabricsApi,
+  searchFabricsApi,
   updateFabricApi,
 } from "../api/fabric";
 import { useAuth } from "./";
@@ -22,7 +23,20 @@ export function useFabric() {
       setFabrics(response);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
+    }
+  };
+
+  const searchFabrics = async (search) => {
+    try {
+      setLoading(true);
+      const response = await searchFabricsApi(search);
+      setLoading(false);
+
+      setFabrics(response);
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
   };
 
@@ -33,7 +47,7 @@ export function useFabric() {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -44,7 +58,7 @@ export function useFabric() {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -55,12 +69,13 @@ export function useFabric() {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
   return {
     getFabrics,
+    searchFabrics,
     addFabric,
     updateFabric,
     deleteFabric,

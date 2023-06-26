@@ -12,7 +12,7 @@ export function useDataset() {
   const getAllDataset = async () => {
     try {
       setLoadingDataset(true);
-      const response = await getAllDatasetApi();
+      const response = await getAllDatasetApi(auth.token);
       setLoadingDataset(false);
       setAllDataset(response);
     } catch (err) {
@@ -24,7 +24,11 @@ export function useDataset() {
   const getDatasetByRangeDate = async (fromDate, toDate) => {
     try {
       setLoadingDataset(true);
-      const response = await getDatasetByRangeDateApi(fromDate, toDate);
+      const response = await getDatasetByRangeDateApi(
+        fromDate,
+        toDate,
+        auth.token
+      );
       setLoadingDataset(false);
       setDataset(response);
       return response;
@@ -42,5 +46,6 @@ export function useDataset() {
     getAllDataset,
     getDatasetByRangeDate,
     setDataset,
+    setAllDataset,
   };
 }

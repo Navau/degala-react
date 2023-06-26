@@ -21,7 +21,7 @@ export function useDemand() {
   const getAllDemand = async () => {
     try {
       setLoading(true);
-      const response = await getAllDemandApi();
+      const response = await getAllDemandApi(auth.token);
       setLoading(false);
       setAllDemand(response);
     } catch (err) {
@@ -33,7 +33,11 @@ export function useDemand() {
   const getDemandByRangeDate = async (fromDate, toDate) => {
     try {
       setLoading(true);
-      const response = await getDemandByRangeDateApi(fromDate, toDate);
+      const response = await getDemandByRangeDateApi(
+        fromDate,
+        toDate,
+        auth.token
+      );
       setLoading(false);
       return response;
     } catch (err) {
@@ -45,7 +49,11 @@ export function useDemand() {
   const getDemandPredictByRangeDate = async (fromDate, toDate) => {
     try {
       setLoadingDemand(true);
-      const response = await getDemandPredictByRangeDateApi(fromDate, toDate);
+      const response = await getDemandPredictByRangeDateApi(
+        fromDate,
+        toDate,
+        auth.token
+      );
       setLoadingDemand(false);
       // setDemand(response);
       return response;

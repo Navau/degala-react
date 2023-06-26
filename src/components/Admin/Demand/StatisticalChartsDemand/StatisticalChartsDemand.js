@@ -8,16 +8,19 @@ import {
   Form,
   Button,
   Label,
+  Segment,
+  Checkbox,
 } from "semantic-ui-react";
 import { Chart } from "react-chartjs-2";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
-import { filter, isNull, isUndefined, map } from "lodash";
+import { filter, groupBy, isNull, isUndefined, map, sumBy } from "lodash";
 import * as Yup from "yup";
 import {
   chartsData,
   chartsOptions,
   typeChartOptions,
+  yearDataTransform,
 } from "../../../../utils/helpers";
 
 import "./StatisticalChartsDemand.scss";
@@ -28,6 +31,7 @@ export function StatisticalChartsDemand(props) {
   const { demandPredictionInfo, predictType, allDataset } = props;
   const [errorRangeDates, setErrorRangeDates] = useState("");
   const [typeChart, setTypeChart] = useState("line");
+  const [largeCharts, setLargeCharts] = useState(false);
   const { getDatasetByRangeDate, dataset, setDataset, loadingDataset } =
     useDataset();
   const formik = useFormik({
@@ -62,7 +66,14 @@ export function StatisticalChartsDemand(props) {
             ? `${formValue.toDate}`
             : `${formValue.toDate}-01`;
 
-        await getDatasetByRangeDate(fromDateFinal, toDateFinal);
+        const response = await getDatasetByRangeDate(
+          fromDateFinal,
+          toDateFinal
+        );
+        let responseFinal =
+          predictType === "month" ? response : yearDataTransform(response);
+
+        setDataset(responseFinal);
       } catch (err) {
         toast.error(err?.message || "Error del servidor");
       }
@@ -82,41 +93,44 @@ export function StatisticalChartsDemand(props) {
             onCancelForm={onCancelForm}
             typeChart={typeChart}
             setTypeChart={setTypeChart}
+            largeCharts={largeCharts}
+            setLargeCharts={setLargeCharts}
           />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={16}>
-          <Header>Pronóstico de Ventas</Header>
+        <Grid.Column width={largeCharts ? 16 : 8}>
+          <Grid.Row>
+            <Header>Pronóstico de Ventas</Header>
+          </Grid.Row>
+          <Divider />
+          <Grid.Row>
+            <Container className="sales-predict">
+              <Chart
+                type={typeChart}
+                options={chartsOptions("sales").optionsline}
+                data={chartsData(demandPredictionInfo, dataset).dataLineSales}
+              />
+            </Container>
+            {largeCharts && <Divider />}
+          </Grid.Row>
         </Grid.Column>
-      </Grid.Row>
-      <Divider />
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Container className="sales-predict">
-            <Chart
-              type={typeChart}
-              options={chartsOptions("sales").optionsline}
-              data={chartsData(demandPredictionInfo, dataset).dataLineSales}
-            />
-          </Container>
-        </Grid.Column>
-      </Grid.Row>
-      <Divider />
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Header>Pronóstico de Productos</Header>
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Container className="products-predict">
-            <Chart
-              type={typeChart}
-              options={chartsOptions("products").optionsline}
-              data={chartsData(demandPredictionInfo, dataset).dataLineProducts}
-            />
-          </Container>
+        <Grid.Column width={largeCharts ? 16 : 8}>
+          <Grid.Row>
+            <Header>Pronóstico de Productos</Header>
+          </Grid.Row>
+          <Divider />
+          <Grid.Row>
+            <Container className="products-predict">
+              <Chart
+                type={typeChart}
+                options={chartsOptions("products").optionsline}
+                data={
+                  chartsData(demandPredictionInfo, dataset).dataLineProducts
+                }
+              />
+            </Container>
+          </Grid.Row>
         </Grid.Column>
       </Grid.Row>
     </Grid>
@@ -133,6 +147,8 @@ function FormSelectExtraOptions(props) {
     loadingDataset,
     typeChart,
     setTypeChart,
+    largeCharts,
+    setLargeCharts,
   } = props;
 
   const optionsByLastDateDataset = (predictTypeParam) => {
@@ -165,8 +181,8 @@ function FormSelectExtraOptions(props) {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={5}>
-            <Form.Field required>
+          <Grid.Column width={3}>
+            <Form.Field>
               <label>Tipo de gráfico:</label>
               <Dropdown
                 placeholder="Tipo de gráfico"
@@ -179,7 +195,21 @@ function FormSelectExtraOptions(props) {
               />
             </Form.Field>
           </Grid.Column>
-          <Grid.Column width={4}>
+          <Grid.Column width={3}>
+            <Form.Field>
+              <label>Tamaño del grafico:</label>
+              <Checkbox
+                toggle
+                label={largeCharts ? "Cambiar a Pequeño" : "Cambiar a Grande"}
+                checked={largeCharts}
+                onChange={() => setLargeCharts((prev) => !prev)}
+              />
+            </Form.Field>
+          </Grid.Column>
+          <Grid.Column width={1}>
+            <Divider vertical />
+          </Grid.Column>
+          <Grid.Column width={3}>
             <Form.Field required>
               <label>Ventas reales desde:</label>
               <Dropdown
@@ -201,7 +231,7 @@ function FormSelectExtraOptions(props) {
               )}
             </Form.Field>
           </Grid.Column>
-          <Grid.Column width={4}>
+          <Grid.Column width={3}>
             <Form.Field required>
               <label>hasta:</label>
               <Dropdown

@@ -10,23 +10,28 @@ import {
 } from "../../../components/Admin";
 import { useDataset, useDemand } from "../../../hooks";
 import { toast } from "react-toastify";
+import { yearDataTransform } from "../../../utils/helpers";
 
 export function DemandAdmin() {
   const [isVisibleAnimation, setIsVisibleAnimation] = useState(false);
   const [demandPredictionInfo, setDemandPredictionInfo] = useState([]);
   const [predictType, setPredictType] = useState("month");
   const { allDemand, getAllDemand } = useDemand();
-  const { allDataset, getAllDataset } = useDataset();
+  const { allDataset, getAllDataset, setAllDataset } = useDataset();
 
   useEffect(() => {
     if (!isVisibleAnimation) setIsVisibleAnimation(true);
   }, []);
   useEffect(() => {
-    getAllDemand().catch(() => toast.error("Error al obtener la demanda"));
+    getAllDemand().catch((err) =>
+      toast.error(err?.message || err?.detail || "Error al obtener la demanda")
+    );
   }, []);
   useEffect(() => {
-    getAllDataset().catch(() =>
-      toast.error("Error al obtener las ventas reales")
+    getAllDataset().catch((err) =>
+      toast.error(
+        err?.message || err?.detail || "Error al obtener las ventas reales"
+      )
     );
   }, []);
 
@@ -63,7 +68,6 @@ export function DemandAdmin() {
                 <Divider />
               </Grid.Column>
             </Grid.Row>
-
             <Element name="demand-predict-charts">
               <Transition
                 visible={size(demandPredictionInfo) > 0}
@@ -75,6 +79,7 @@ export function DemandAdmin() {
                     <Grid.Column width={16}>
                       <StatisticalChartsDemand
                         demandPredictionInfo={demandPredictionInfo}
+                        setDemandPredictionInfo={setDemandPredictionInfo}
                         predictType={predictType}
                         allDataset={allDataset}
                       />

@@ -7,7 +7,7 @@ import {
   Dropdown,
   Label,
 } from "semantic-ui-react";
-import { find, forEach, map, size } from "lodash";
+import { find, forEach, isUndefined, map, size } from "lodash";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import { useFormik } from "formik";
@@ -25,7 +25,11 @@ export function AddEditSale2Form(props) {
   const { categories, getCategories } = useCategory();
   const { products, getProductsByCategoryID, updateProductStock } =
     useProduct();
-  const [productAux, setProductAux] = useState({});
+  const [productAux, setProductAux] = useState({
+    stock: 0,
+    price: 0.0,
+    image: "",
+  });
   const { addSale2, updateSale2 } = useSale2();
   useEffect(() => {
     getCategories();
@@ -105,7 +109,7 @@ export function AddEditSale2Form(props) {
             search
             options={categoriesFormat}
             value={formik.values.category}
-            error={formik.errors.category}
+            error={!isUndefined(formik.errors.category)}
             onChange={async (_, data) => {
               formik.setFieldValue("category", data.value);
               formik.setFieldValue("product", null);
@@ -127,7 +131,7 @@ export function AddEditSale2Form(props) {
             search
             options={productsFormat}
             value={formik.values.product}
-            error={formik.errors.product}
+            error={!isUndefined(formik.errors.product)}
             onChange={(_, data) => {
               formik.setFieldValue("product", data.value);
               const resultFind = find(products, (item) => {
@@ -150,7 +154,6 @@ export function AddEditSale2Form(props) {
           placeholder="Cantidad a vender"
           value={formik.values.quantity}
           onChange={(e) => {
-            console.log(e.target.value);
             formik.setFieldValue("quantity", e.target.value);
             formik.setFieldValue("stock", productAux?.stock - e.target.value);
           }}
@@ -172,7 +175,6 @@ export function AddEditSale2Form(props) {
           placeholder="Pago del producto"
           value={formik.values.payment}
           onChange={(e) => {
-            console.log(e.target.value);
             formik.setFieldValue("payment", e.target.value);
             formik.setFieldValue(
               "change",
@@ -256,8 +258,8 @@ function initialValues(data, auth) {
     active:
       data?.active === false || data?.active === true ? data.active : false,
     user: auth?.me?.id || "",
-    category: data?.category || "",
-    product: data?.product || "",
+    category: data?.category || undefined,
+    product: data?.product || undefined,
   };
 }
 

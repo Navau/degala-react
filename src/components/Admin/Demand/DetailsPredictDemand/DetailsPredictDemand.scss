@@ -42,7 +42,6 @@
       transform: translateY(-5px);
     }
   }
-
   .grid-tab-pane-detail-predict {
     margin: 0;
     .divider-detail {
@@ -66,14 +65,14 @@
         border: $dark 1.5px solid;
       }
       .column-detail-main-title {
-        background-color: $dark-light;
+        background-color: $dark;
         color: $white;
         font-weight: bold;
         padding: 0;
         font-size: 1.1rem;
       }
       .column-detail-title {
-        background-color: $dark-light;
+        background-color: $dark;
         color: $white;
         font-weight: bold;
       }
@@ -93,7 +92,9 @@
     }
   }
 
-  .active.tab {
-    background-color: $info !important;
+  .ui.tab.active {
+    background-color: $white !important;
+    padding: 30px 10px;
+    box-shadow: 0 2px 2px 0 $black, 0 1px 5px 0 $black, 0 3px 1px -2px $black;
   }
 }

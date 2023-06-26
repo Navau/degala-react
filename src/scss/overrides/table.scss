@@ -1,3 +1,5 @@
+@import "../colors.scss";
+
 td {
   font-size: 16px;
   &.status {
@@ -15,5 +17,23 @@ td {
 tr {
   &.no-active {
     background-color: #ffcccc !important;
+  }
+}
+
+thead {
+  tr {
+    th {
+      border: 2px solid $dark-light;
+      background-color: $dark !important;
+      color: $white !important;
+    }
+  }
+}
+
+tbody {
+  tr {
+    td {
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
   }
 }

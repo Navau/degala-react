@@ -5,6 +5,7 @@ import {
   getProductByIdApi,
   getProductsApi,
   getProductsByCategoryIDApi,
+  searchProductsApi,
   updateProductApi,
   updateProductStockApi,
 } from "../api/product";
@@ -24,8 +25,21 @@ export function useProduct() {
 
       setProducts(response);
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
+    }
+  };
+
+  const searchProducts = async (search) => {
+    try {
+      setLoading(true);
+      const response = await searchProductsApi(search);
+      setLoading(false);
+
+      setProducts(response);
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
   };
 
@@ -37,8 +51,8 @@ export function useProduct() {
 
       setProducts(response);
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -49,8 +63,8 @@ export function useProduct() {
       setLoading(false);
       return response;
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -61,8 +75,8 @@ export function useProduct() {
       setLoading(false);
       return response;
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -73,8 +87,8 @@ export function useProduct() {
       setLoading(false);
       return response;
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -84,8 +98,8 @@ export function useProduct() {
       await deleteProductApi(id, auth.token);
       setLoading(false);
     } catch (err) {
-      setError(err);
       setLoading(false);
+      throw err;
     }
   };
 
@@ -98,7 +112,7 @@ export function useProduct() {
       return response;
     } catch (err) {
       setLoading(false);
-      setError(err);
+      throw err;
     }
   };
 
@@ -113,5 +127,6 @@ export function useProduct() {
     products,
     getProductsByCategoryID,
     updateProductStock,
+    searchProducts,
   };
 }

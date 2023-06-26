@@ -8,19 +8,25 @@ import {
 } from "../../components/Admin";
 import { ModalBasic, ModalBoolean } from "../../components/Common";
 import { useFabric } from "../../hooks/useFabric";
+import { toast } from "react-toastify";
 
 export function FabricsAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [showModalBoolean, setShowModalBoolean] = useState(false);
   const [titleModal, setTitleModal] = useState(null);
   const [contentModal, setContentModal] = useState(null);
-  const [dataSingleDelete, setDataSingleDelete] = useState(null);
   const [refetch, setRefetch] = useState(false);
+  const [actionsButtons, setActionsButtons] = useState({});
 
-  const { loading, error, fabrics, getFabrics, deleteFabric } = useFabric();
+  const { loading, error, fabrics, getFabrics, deleteFabric, searchFabrics } =
+    useFabric();
 
   useEffect(() => {
-    getFabrics();
+    getFabrics().catch((err) =>
+      toast.error(
+        err?.message || err?.detail || "Error al obtener las categorías"
+      )
+    );
   }, [refetch]);
 
   const openCloseModal = () => setShowModal((prev) => !prev);
@@ -48,15 +54,64 @@ export function FabricsAdmin() {
   };
 
   const onDeleteFabric = (data) => {
-    setDataSingleDelete(data);
     setTitleModal("Eliminar tela");
     setContentModal(<DeleteFabricForm fabric={data} />);
+    setActionsButtons({
+      ok: {
+        title: "Si, deseo eliminar",
+        iconName: "checkmark",
+        onClick: async () => {
+          try {
+            await deleteFabric(data.id);
+            onRefresh();
+            openCloseModalBoolean();
+            toast.success("Eliminado!");
+          } catch (err) {
+            toast.success("Error al eliminar!");
+          }
+        },
+      },
+      cancel: {
+        title: "No eliminar",
+        iconName: "remove",
+        onClick: () => {
+          openCloseModalBoolean();
+        },
+      },
+    });
     openCloseModalBoolean();
   };
 
   return (
     <>
-      <HeaderPage2 title="Telas" btnTitle="Nueva Tela" btnClick={addFabric} />
+      <HeaderPage2
+        title="Telas"
+        btnTitle="Nueva Tela"
+        btnClick={addFabric}
+        options={[
+          {
+            input: {
+              loading,
+              className: "",
+              icon: "search",
+              title: "Buscar una tela",
+              onChange: (value) =>
+                searchFabrics(value).catch((err) =>
+                  toast.error(
+                    err?.message || err?.detail || "Error al buscar las telas"
+                  )
+                ),
+            },
+            button: {
+              loading,
+              className: "button-reload-table-admin",
+              icon: "redo",
+              title: "Recargar información",
+              onClick: () => onRefresh(),
+            },
+          },
+        ]}
+      />
       {loading ? (
         <Loader active inline="centered">
           Cargando...
@@ -76,12 +131,10 @@ export function FabricsAdmin() {
       />
       <ModalBoolean
         show={showModalBoolean}
-        onClose={openCloseModalBoolean}
-        onRefetch={onRefresh}
         title={titleModal}
         children={contentModal}
-        deleteFunction={deleteFabric}
-        data={dataSingleDelete}
+        onClose={openCloseModalBoolean}
+        actions={actionsButtons}
       />
     </>
   );
